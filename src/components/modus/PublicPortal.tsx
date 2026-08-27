@@ -291,59 +291,6 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
 
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
 
-      <Dialog open={!!emergency} onOpenChange={(o) => !o && setEmergency(null)}>
-        <DialogContent className="max-w-lg">
-          {emergency ? (
-            <>
-              <DialogHeader>
-                <div className="mb-2 flex items-center gap-2">
-                  <SeverityBadge severity={emergency.severity} />
-                  <span className="text-xs text-muted-foreground">{emergency.id}</span>
-                </div>
-                <DialogTitle className="text-xl">{emergency.name}</DialogTitle>
-                <DialogDescription>
-                  {emergency.type} · {emergency.region}, {emergency.department} · Actualizado {emergency.updated}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 text-sm">
-                <img
-                  src={coverFor(emergency.region)}
-                  alt={`${emergency.type} en ${emergency.region}`}
-                  width={1024}
-                  height={640}
-                  loading="lazy"
-                  className="h-44 w-full rounded-xl object-cover"
-                />
-                <div className="rounded-xl border border-border bg-surface p-3">
-                  <p className="metric-label mb-1">Fuente del dato de riesgo</p>
-                  <p className="text-muted-foreground">{emergency.riskSource}</p>
-                </div>
-                <div className="rounded-xl border border-border bg-surface p-3">
-                  <p className="metric-label mb-2">Necesidades detectadas por IA</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {emergency.aiNeeds.map((n) => (
-                      <span key={n} className="rounded-full border border-primary/40 px-2 py-0.5 text-xs text-primary">
-                        {n}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="metric-label mb-2">Entidades de respuesta activas</p>
-                  <ul className="space-y-1 text-muted-foreground">
-                    {emergency.teams.map((t) => (
-                      <li key={t}>· {t}</li>
-                    ))}
-                  </ul>
-                </div>
-                <Button className="w-full" onClick={() => setEmergency(null)}>
-                  Cerrar detalle
-                </Button>
-              </div>
-            </>
-          ) : null}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
