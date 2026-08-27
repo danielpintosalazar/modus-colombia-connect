@@ -137,15 +137,15 @@ export function AiProgress({ value, label = "Avance validado por IA" }: { value:
 export function Sparkbars({ data, className }: { data: number[]; className?: string }) {
   const max = Math.max(...data, 1);
   return (
-    <div className={cn("flex h-10 items-end gap-1", className)}>
+    <div className={cn("flex h-10 items-end gap-1.5", className)}>
       {data.map((v, i) => (
         <span
           key={i}
           className={cn(
-            "flex-1 rounded-sm transition-all",
+            "flex-1 rounded-t-[3px] transition-all",
             i === data.length - 1 ? "bg-primary" : "bg-primary/30",
           )}
-          style={{ height: `${Math.max(12, (v / max) * 100)}%` }}
+          style={{ height: `${Math.max(8, (v / max) * 100)}%` }}
         />
       ))}
     </div>
