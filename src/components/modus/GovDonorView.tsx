@@ -79,11 +79,52 @@ export function GovDonorView() {
         />
 
         <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Emergencias priorizadas" value={String(filtered.length)} tone="critical" />
-          <StatCard label="Prioridad nacional" value={String(emergencies.filter((e) => e.nationalPriority).length)} tone="critical" hint="Declaratoria activa" />
-          <StatCard label="Recursos públicos" value="$16.150M" tone="ai" hint="COP movilizados" />
-          <StatCard label="Recursos privados" value="$15.750M" tone="csr" hint="COP movilizados" />
+          <KpiCard
+            label="Emergencias priorizadas"
+            value={String(filtered.length)}
+            hint="Con priorización IA activa"
+            data={[3, 4, 4, 5, 5, 6, 6]}
+          />
+          <KpiCard
+            label="Prioridad nacional"
+            value={String(emergencies.filter((e) => e.nationalPriority).length)}
+            hint="Declaratoria activa"
+            data={[1, 1, 2, 2, 2, 3, 3]}
+          />
+          <KpiCard
+            label="Recursos públicos"
+            value="$16.150M"
+            trend="+9%"
+            hint="COP movilizados"
+            data={[6.1, 7.8, 9.4, 11.2, 13.1, 14.8, 16.15]}
+            chart="line"
+          />
+          <KpiCard
+            label="Recursos privados"
+            value="$15.750M"
+            trend="+14%"
+            hint="COP movilizados"
+            data={[4.2, 6.1, 7.9, 9.8, 11.9, 13.9, 15.75]}
+            chart="line"
+          />
         </div>
+
+        <div className="mb-6 rounded-2xl border border-border bg-card p-5">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <p className="metric-label">Contraste público vs privado</p>
+              <h3 className="mt-1 text-sm font-semibold">Recursos por tipo de emergencia (millones COP)</h3>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {mobilizedResources.map((m) => m.type).join(" · ")}
+            </p>
+          </div>
+          <DualSparkbars
+            a={mobilizedResources.map((m) => m.publico)}
+            b={mobilizedResources.map((m) => m.privado)}
+          />
+        </div>
+
 
         <div className="grid gap-4 space-y-0 lg:grid-cols-[1.5fr_1fr]">
           <div className="rounded-2xl border border-border bg-surface p-5">
