@@ -134,3 +134,102 @@ export function AiProgress({ value, label = "Avance validado por IA" }: { value:
   );
 }
 
+export function Sparkbars({ data, className }: { data: number[]; className?: string }) {
+  const max = Math.max(...data, 1);
+  return (
+    <div className={cn("flex h-10 items-end gap-1", className)}>
+      {data.map((v, i) => (
+        <span
+          key={i}
+          className={cn(
+            "flex-1 rounded-sm transition-all",
+            i === data.length - 1 ? "bg-primary" : "bg-primary/30",
+          )}
+          style={{ height: `${Math.max(12, (v / max) * 100)}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function Sparkline({ data, className }: { data: number[]; className?: string }) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const span = max - min || 1;
+  const points = data
+    .map((v, i) => `${(i / (data.length - 1)) * 100},${30 - ((v - min) / span) * 26 - 2}`)
+    .join(" ");
+  return (
+    <svg viewBox="0 0 100 30" preserveAspectRatio="none" className={cn("h-10 w-full", className)} aria-hidden>
+      <polyline points={points} fill="none" stroke="var(--primary)" strokeWidth={2} strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function KpiCard({
+  label,
+  value,
+  hint,
+  trend,
+  chart = "bars",
+  data,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  trend?: string;
+  chart?: "bars" | "line";
+  data: number[];
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <p className="metric-label">{label}</p>
+      <div className="mt-2 flex items-end justify-between gap-3">
+        <p className="font-display text-2xl font-semibold sm:text-3xl">{value}</p>
+        {trend ? (
+          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{trend}</span>
+        ) : null}
+      </div>
+      <div className="mt-3">
+        {chart === "line" ? <Sparkline data={data} /> : <Sparkbars data={data} />}
+      </div>
+      {hint ? <p className="mt-2 text-xs text-muted-foreground">{hint}</p> : null}
+    </div>
+  );
+}
+
+export function DualSparkbars({
+  a,
+  b,
+  labelA = "Público",
+  labelB = "Privado",
+}: {
+  a: number[];
+  b: number[];
+  labelA?: string;
+  labelB?: string;
+}) {
+  const max = Math.max(...a, ...b, 1);
+  return (
+    <div>
+      <div className="flex h-12 items-end gap-1.5">
+        {a.map((v, i) => (
+          <span key={i} className="flex flex-1 items-end gap-0.5">
+            <span className="flex-1 rounded-sm bg-foreground/80" style={{ height: `${(v / max) * 48}px` }} />
+            <span className="flex-1 rounded-sm bg-primary" style={{ height: `${((b[i] ?? 0) / max) * 48}px` }} />
+          </span>
+        ))}
+      </div>
+      <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <span className="size-2 rounded-sm bg-foreground/80" /> {labelA}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="size-2 rounded-sm bg-primary" /> {labelB}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+
