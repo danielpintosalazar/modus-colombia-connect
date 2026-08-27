@@ -1,34 +1,26 @@
 import { useState } from "react";
-import { Activity, Award, HeartHandshake, MapPin, Search, Siren, Smartphone, Trophy, Users } from "lucide-react";
+import { Activity, Award, HeartHandshake, Search, Siren, Smartphone, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { coverFor } from "@/lib/covers";
-import { donors, emergencies, initiatives, regions, type Emergency, type Initiative } from "@/lib/modus-data";
-import { ActorAvatars, AiProgress, KpiCard, SectionHeading, SeverityBadge } from "./common";
+import { donors, emergencies, initiatives, regions, type Initiative } from "@/lib/modus-data";
+import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
+import { ActorCards } from "./ActorCards";
+import { EmergencyCarousel } from "./EmergencyCarousel";
 import { EmergencyMap } from "./EmergencyMap";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 import { VictimLightView } from "./VictimLightView";
+import type { RoleKey } from "./RoleSwitcher";
 
-function initials(name: string) {
-  return name
-    .replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g, "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-}
-
-export function PublicPortal({ onReport }: { onReport: () => void }) {
+export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void; onRoleChange: (r: RoleKey) => void }) {
   const [region, setRegion] = useState<string>("todas");
   const [query, setQuery] = useState("");
   const [detail, setDetail] = useState<Initiative | null>(null);
-  const [emergency, setEmergency] = useState<Emergency | null>(null);
   const [victimView, setVictimView] = useState(false);
+
 
   const q = query.trim().toLowerCase();
   const filtered = initiatives.filter(
@@ -76,6 +68,14 @@ export function PublicPortal({ onReport }: { onReport: () => void }) {
         </div>
       </section>
 
+      <ActorCards
+        onReport={onReport}
+        onBeneficiary={() => setVictimView(true)}
+        onRole={(r) => onRoleChange(r)}
+      />
+
+
+
       {/* ESTADÍSTICAS */}
       <section id="estadisticas" className="scroll-mt-24">
         <SectionHeading
@@ -116,58 +116,14 @@ export function PublicPortal({ onReport }: { onReport: () => void }) {
       <section id="emergencias" className="scroll-mt-24">
         <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">Emergencias activas</h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA y las entidades que ya
-          están operando en terreno.
+          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA, las entidades que operan
+          en terreno y los donantes que financian la respuesta.
         </p>
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {emergencies.map((e) => (
-            <article
-              key={e.id}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-panel"
-            >
-              <div className="relative">
-                <img
-                  src={coverFor(e.region)}
-                  alt={`${e.type} en ${e.region}`}
-                  width={1024}
-                  height={640}
-                  loading="lazy"
-                  className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
-                  <MapPin className="size-3.5 text-primary" /> {e.region}, {e.department}
-                </span>
-                <span className="absolute right-3 top-3">
-                  <SeverityBadge severity={e.severity} className="bg-background/90 backdrop-blur" />
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <h3 className="text-base font-semibold leading-snug">{e.name}</h3>
-                <p className="mt-1 text-xs text-muted-foreground">{e.type}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {e.aiNeeds.slice(0, 3).map((n) => (
-                    <span
-                      key={n}
-                      className="rounded-full border border-border bg-surface px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-                    >
-                      {n}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-                  <ActorAvatars actors={e.teams.map(initials)} max={3} />
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Users className="size-3.5" /> {e.affected.toLocaleString("es-CO")}
-                  </span>
-                </div>
-                <Button variant="outline" className="mt-4 w-full rounded-full" onClick={() => setEmergency(e)}>
-                  Ver detalle de la emergencia
-                </Button>
-              </div>
-            </article>
-          ))}
+        <div className="mt-8">
+          <EmergencyCarousel />
         </div>
       </section>
+
 
       {/* VISTA DAMNIFICADO */}
       <section id="lightweight" className="scroll-mt-24">
@@ -335,59 +291,6 @@ export function PublicPortal({ onReport }: { onReport: () => void }) {
 
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
 
-      <Dialog open={!!emergency} onOpenChange={(o) => !o && setEmergency(null)}>
-        <DialogContent className="max-w-lg">
-          {emergency ? (
-            <>
-              <DialogHeader>
-                <div className="mb-2 flex items-center gap-2">
-                  <SeverityBadge severity={emergency.severity} />
-                  <span className="text-xs text-muted-foreground">{emergency.id}</span>
-                </div>
-                <DialogTitle className="text-xl">{emergency.name}</DialogTitle>
-                <DialogDescription>
-                  {emergency.type} · {emergency.region}, {emergency.department} · Actualizado {emergency.updated}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 text-sm">
-                <img
-                  src={coverFor(emergency.region)}
-                  alt={`${emergency.type} en ${emergency.region}`}
-                  width={1024}
-                  height={640}
-                  loading="lazy"
-                  className="h-44 w-full rounded-xl object-cover"
-                />
-                <div className="rounded-xl border border-border bg-surface p-3">
-                  <p className="metric-label mb-1">Fuente del dato de riesgo</p>
-                  <p className="text-muted-foreground">{emergency.riskSource}</p>
-                </div>
-                <div className="rounded-xl border border-border bg-surface p-3">
-                  <p className="metric-label mb-2">Necesidades detectadas por IA</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {emergency.aiNeeds.map((n) => (
-                      <span key={n} className="rounded-full border border-primary/40 px-2 py-0.5 text-xs text-primary">
-                        {n}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="metric-label mb-2">Entidades de respuesta activas</p>
-                  <ul className="space-y-1 text-muted-foreground">
-                    {emergency.teams.map((t) => (
-                      <li key={t}>· {t}</li>
-                    ))}
-                  </ul>
-                </div>
-                <Button className="w-full" onClick={() => setEmergency(null)}>
-                  Cerrar detalle
-                </Button>
-              </div>
-            </>
-          ) : null}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

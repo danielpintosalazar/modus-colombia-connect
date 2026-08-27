@@ -35,7 +35,7 @@ function Index() {
 
       <main className="mx-auto max-w-7xl px-4 pt-8 sm:px-6">
         <div key={role} className="animate-rise">
-          {role === "publico" ? <PublicPortal onReport={() => setReportOpen(true)} /> : null}
+          {role === "publico" ? <PublicPortal onReport={() => setReportOpen(true)} onRoleChange={setRole} /> : null}
           {role === "privado" ? <PrivateDonorView /> : null}
           {role === "gobierno" ? <GovDonorView /> : null}
           {role === "entidad" ? <ResponseEntityView /> : null}
