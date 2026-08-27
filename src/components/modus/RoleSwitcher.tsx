@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Building2, Check, HeartHandshake, Landmark, Siren, UserRound, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -21,6 +22,7 @@ export function ModusHeader({
   onRoleChange: (r: RoleKey) => void;
   onReport: () => void;
 }) {
+  const [open, setOpen] = useState(false);
   const current = roles.find((r) => r.key === role) ?? roles[0]!;
 
   return (
@@ -49,7 +51,7 @@ export function ModusHeader({
             <span className="sm:hidden">Reportar</span>
           </Button>
 
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <button
                 type="button"
@@ -72,7 +74,10 @@ export function ModusHeader({
                     <button
                       key={r.key}
                       type="button"
-                      onClick={() => onRoleChange(r.key)}
+                      onClick={() => {
+                        onRoleChange(r.key);
+                        setOpen(false);
+                      }}
                       className={cn(
                         "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
                         activeRole ? "bg-primary/10 text-foreground" : "hover:bg-surface-strong",
