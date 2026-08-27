@@ -21,29 +21,48 @@ export function PublicPortal({ onReport }: { onReport: () => void }) {
 
   return (
     <div className="space-y-16 pb-20">
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-hero">
+      <section className="relative overflow-hidden rounded-3xl border border-border bg-hero shadow-panel">
         <img
           src={heroImg}
           alt="Equipos de la Defensa Civil Colombiana entregando kits humanitarios"
           width={1536}
           height={1024}
-          className="absolute inset-0 size-full object-cover opacity-30"
+          className="absolute inset-0 size-full object-cover opacity-10"
         />
         <div className="relative px-6 py-16 sm:px-12 sm:py-24">
-          <span className="inline-flex items-center gap-2 rounded-full border border-critical/40 bg-critical/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-critical">
+          <span className="inline-flex items-center gap-2 rounded-full border border-critical/25 bg-critical/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-critical">
             <Activity className="size-3.5" /> {emergencies.length} emergencias activas en Colombia
           </span>
           <h1 className="mt-6 font-display text-6xl font-bold tracking-tight sm:text-8xl">Modus</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Tú también puedes ayudar. Plataforma de coordinación y atención en tiempo real ante desastres en
-            Colombia.
+            Tú también puedes ayudar. Coordinación y atención en tiempo real ante desastres en Colombia.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" variant="destructive" onClick={onReport}>
-              <Siren className="mr-2 size-4" /> Reportar Emergencia
+
+          <div className="mt-8 flex max-w-2xl flex-col gap-2 rounded-3xl border border-border bg-background p-2 shadow-panel sm:flex-row sm:items-center sm:rounded-full">
+            <div className="flex min-w-0 flex-1 items-center gap-2 px-4 py-2">
+              <Search className="size-4 shrink-0 text-muted-foreground" />
+              <Select value={region} onValueChange={setRegion}>
+                <SelectTrigger className="w-full border-0 bg-transparent px-0 shadow-none focus:ring-0">
+                  <SelectValue placeholder="¿Dónde necesitas ayuda?" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todas">Todas las regiones</SelectItem>
+                  {regions.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {r}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button size="lg" className="rounded-full" onClick={() => setVictimView(true)}>
+              <Search className="mr-2 size-4" /> Buscar Ayuda / Registrarse
             </Button>
-            <Button size="lg" variant="outline" onClick={() => setVictimView(true)}>
-              <Search className="mr-2 size-4" /> Buscar Ayuda / Registrarse como Beneficiario
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button size="lg" variant="destructive" className="rounded-full" onClick={onReport}>
+              <Siren className="mr-2 size-4" /> Reportar Emergencia
             </Button>
           </div>
 
@@ -55,6 +74,7 @@ export function PublicPortal({ onReport }: { onReport: () => void }) {
           </div>
         </div>
       </section>
+
 
       <EmergencyMap />
 
