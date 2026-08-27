@@ -82,7 +82,7 @@ export function StatCard({
   } as const;
 
   return (
-    <div className={cn("rounded-xl border p-5 transition-colors", tones[tone])}>
+    <div className={cn("rounded-2xl border p-5 shadow-sm transition-colors", tones[tone])}>
       <div className="flex items-start justify-between gap-3">
         <p className="metric-label">{label}</p>
         {icon ? <span className={cn("shrink-0", valueTone[tone])}>{icon}</span> : null}
@@ -122,14 +122,15 @@ export function AiProgress({ value, label = "Avance validado por IA" }: { value:
     <div>
       <div className="mb-1.5 flex items-center justify-between text-xs">
         <span className="text-muted-foreground">{label}</span>
-        <span className="font-semibold text-ai">{value}%</span>
+        <span className="font-semibold text-primary">{value}%</span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-ai transition-all duration-700"
+          className="h-full rounded-full bg-primary transition-all duration-700"
           style={{ width: `${value}%` }}
         />
       </div>
     </div>
   );
 }
+
