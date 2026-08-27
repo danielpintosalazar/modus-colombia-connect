@@ -1,34 +1,26 @@
 import { useState } from "react";
-import { Activity, Award, HeartHandshake, MapPin, Search, Siren, Smartphone, Trophy, Users } from "lucide-react";
+import { Activity, Award, HeartHandshake, Search, Siren, Smartphone, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { coverFor } from "@/lib/covers";
-import { donors, emergencies, initiatives, regions, type Emergency, type Initiative } from "@/lib/modus-data";
-import { ActorAvatars, AiProgress, KpiCard, SectionHeading, SeverityBadge } from "./common";
+import { donors, emergencies, initiatives, regions, type Initiative } from "@/lib/modus-data";
+import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
+import { ActorCards } from "./ActorCards";
+import { EmergencyCarousel } from "./EmergencyCarousel";
 import { EmergencyMap } from "./EmergencyMap";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 import { VictimLightView } from "./VictimLightView";
+import type { RoleKey } from "./RoleSwitcher";
 
-function initials(name: string) {
-  return name
-    .replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g, "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-}
-
-export function PublicPortal({ onReport }: { onReport: () => void }) {
+export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void; onRoleChange: (r: RoleKey) => void }) {
   const [region, setRegion] = useState<string>("todas");
   const [query, setQuery] = useState("");
   const [detail, setDetail] = useState<Initiative | null>(null);
-  const [emergency, setEmergency] = useState<Emergency | null>(null);
   const [victimView, setVictimView] = useState(false);
+
 
   const q = query.trim().toLowerCase();
   const filtered = initiatives.filter(
