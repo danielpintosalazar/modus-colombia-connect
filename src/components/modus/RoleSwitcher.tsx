@@ -1,5 +1,6 @@
-import { Building2, HeartHandshake, Landmark, Siren, Users } from "lucide-react";
+import { Building2, Check, HeartHandshake, Landmark, Siren, UserRound, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 export type RoleKey = "publico" | "privado" | "gobierno" | "entidad";
@@ -20,11 +21,13 @@ export function ModusHeader({
   onRoleChange: (r: RoleKey) => void;
   onReport: () => void;
 }) {
+  const current = roles.find((r) => r.key === role) ?? roles[0]!;
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <span className="flex size-9 items-center justify-center rounded-full bg-foreground text-background">
             <Siren className="size-4" />
           </span>
           <div className="leading-none">
@@ -35,50 +38,60 @@ export function ModusHeader({
           </div>
         </div>
 
-        <Button
-          variant="destructive"
-          className="ml-auto animate-pulse-ring order-2 rounded-full sm:order-none"
-          onClick={onReport}
-        >
-          <Siren className="mr-2 size-4" /> Reportar Emergencia
-        </Button>
-      </div>
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <Button
+            variant="destructive"
+            className="animate-pulse-ring rounded-full"
+            onClick={onReport}
+          >
+            <Siren className="mr-2 size-4" />
+            <span className="hidden sm:inline">Reportar Emergencia</span>
+            <span className="sm:hidden">Reportar</span>
+          </Button>
 
-      <nav className="mx-auto max-w-7xl px-4 pb-3 sm:px-6">
-        <div className="flex gap-1.5 overflow-x-auto rounded-full border border-border bg-surface p-1.5 shadow-panel">
-          {roles.map((r) => {
-            const Icon = r.icon;
-            const activeRole = role === r.key;
-            return (
+          <Popover>
+            <PopoverTrigger asChild>
               <button
-                key={r.key}
                 type="button"
-                onClick={() => onRoleChange(r.key)}
-                className={cn(
-                  "flex min-w-fit flex-1 items-center gap-2.5 rounded-full px-4 py-2 text-left transition-all duration-300",
-                  activeRole
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-                )}
+                aria-label="Cambiar rol de usuario"
+                className="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-foreground transition-colors hover:border-primary/60 hover:bg-surface-strong"
               >
-                <Icon className="size-4 shrink-0" />
-                <span className="whitespace-nowrap">
-                  <span className="block text-xs font-semibold sm:text-sm">{r.label}</span>
-                  <span
-                    className={cn(
-                      "hidden text-[11px] lg:block",
-                      activeRole ? "text-primary-foreground/80" : "text-muted-foreground",
-                    )}
-                  >
-                    {r.desc}
-                  </span>
-                </span>
+                <UserRound className="size-5" />
               </button>
-            );
-          })}
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-80 p-2">
+              <div className="px-2 pb-2 pt-1">
+                <p className="metric-label">Rol activo</p>
+                <p className="text-sm font-semibold">{current.label}</p>
+              </div>
+              <div className="space-y-1">
+                {roles.map((r) => {
+                  const Icon = r.icon;
+                  const activeRole = role === r.key;
+                  return (
+                    <button
+                      key={r.key}
+                      type="button"
+                      onClick={() => onRoleChange(r.key)}
+                      className={cn(
+                        "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
+                        activeRole ? "bg-primary/10 text-foreground" : "hover:bg-surface-strong",
+                      )}
+                    >
+                      <Icon className={cn("mt-0.5 size-4 shrink-0", activeRole ? "text-primary" : "text-muted-foreground")} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold">{r.label}</span>
+                        <span className="block text-xs text-muted-foreground">{r.desc}</span>
+                      </span>
+                      {activeRole ? <Check className="mt-0.5 size-4 shrink-0 text-primary" /> : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
-      </nav>
-
+      </div>
     </header>
   );
 }
