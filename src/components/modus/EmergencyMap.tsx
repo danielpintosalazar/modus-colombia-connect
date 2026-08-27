@@ -34,8 +34,9 @@ export function EmergencyMap() {
         description="Emergencias activas, entidades desplegadas en campo y zonas de riesgo UNGRD / IDEAM sobre el territorio nacional."
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-panel">
+      <div className="grid gap-4 lg:grid-cols-4">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-panel lg:col-span-3">
+
           <img
             src={mapImg}
             alt="Mapa topográfico de Colombia con emergencias activas"
@@ -109,7 +110,7 @@ export function EmergencyMap() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 lg:col-span-1">
           <div className="rounded-2xl border border-border bg-surface p-5">
             <div className="mb-4 flex items-center gap-2">
               <Layers className="size-4 text-primary" />
