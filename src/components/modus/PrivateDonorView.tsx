@@ -193,7 +193,7 @@ export function PrivateDonorView() {
           <div className="lg:col-span-4">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="metric-label">Avance mínimo</span>
-              <span className="font-semibold text-ai">{minProgress[0]}%</span>
+              <span className="font-semibold text-primary">{minProgress[0]}%</span>
             </div>
             <Slider value={minProgress} onValueChange={setMinProgress} max={100} step={5} />
           </div>
@@ -245,6 +245,42 @@ export function PrivateDonorView() {
       </section>
 
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
+
+      <Dialog open={matching} onOpenChange={() => {}}>
+        <DialogContent className="max-w-sm" showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Brain className="size-4 text-primary" /> Motor de match Modus IA
+            </DialogTitle>
+            <DialogDescription>Cruzando tu estrategia RSE con las necesidades priorizadas.</DialogDescription>
+          </DialogHeader>
+          <ul className="space-y-3">
+            {matchSteps.map((s, i) => (
+              <li
+                key={s}
+                className={cn(
+                  "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-all",
+                  i < step
+                    ? "border-primary/40 bg-primary/5 text-foreground"
+                    : i === step
+                      ? "border-primary bg-card font-semibold"
+                      : "border-border bg-surface text-muted-foreground",
+                )}
+              >
+                {i < step ? (
+                  <Check className="size-4 shrink-0 text-primary" />
+                ) : i === step ? (
+                  <Loader2 className="size-4 shrink-0 animate-spin text-primary" />
+                ) : (
+                  <span className="size-4 shrink-0 rounded-full border border-input" />
+                )}
+                {s}
+              </li>
+            ))}
+          </ul>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
