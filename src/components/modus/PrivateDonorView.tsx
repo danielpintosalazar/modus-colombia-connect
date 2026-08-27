@@ -30,7 +30,7 @@ export function PrivateDonorView() {
         (i) =>
           (area === "todas" || i.region === area) &&
           (type === "todos" || i.investmentType === type) &&
-          i.progress >= minProgress[0] &&
+          i.progress >= (minProgress[0] ?? 0) &&
           (i.title.toLowerCase().includes(query.toLowerCase()) ||
             i.description.toLowerCase().includes(query.toLowerCase())),
       ),
