@@ -21,10 +21,10 @@ export function ModusHeader({
   onReport: () => void;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-critical text-critical-foreground">
+          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <Siren className="size-4" />
           </span>
           <div className="leading-none">
@@ -37,7 +37,7 @@ export function ModusHeader({
 
         <Button
           variant="destructive"
-          className="ml-auto animate-pulse-ring order-2 sm:order-none"
+          className="ml-auto animate-pulse-ring order-2 rounded-full sm:order-none"
           onClick={onReport}
         >
           <Siren className="mr-2 size-4" /> Reportar Emergencia
@@ -45,7 +45,7 @@ export function ModusHeader({
       </div>
 
       <nav className="mx-auto max-w-7xl px-4 pb-3 sm:px-6">
-        <div className="flex gap-2 overflow-x-auto rounded-xl border border-border bg-surface p-1.5">
+        <div className="flex gap-1.5 overflow-x-auto rounded-full border border-border bg-surface p-1.5 shadow-panel">
           {roles.map((r) => {
             const Icon = r.icon;
             const activeRole = role === r.key;
@@ -55,22 +55,30 @@ export function ModusHeader({
                 type="button"
                 onClick={() => onRoleChange(r.key)}
                 className={cn(
-                  "flex min-w-fit flex-1 items-center gap-2.5 rounded-lg px-3 py-2 text-left transition-all duration-300",
+                  "flex min-w-fit flex-1 items-center gap-2.5 rounded-full px-4 py-2 text-left transition-all duration-300",
                   activeRole
-                    ? "bg-primary/15 text-foreground shadow-glow-ai ring-1 ring-primary/40"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
                 )}
               >
-                <Icon className={cn("size-4 shrink-0", activeRole && "text-primary")} />
+                <Icon className="size-4 shrink-0" />
                 <span className="whitespace-nowrap">
                   <span className="block text-xs font-semibold sm:text-sm">{r.label}</span>
-                  <span className="hidden text-[11px] text-muted-foreground lg:block">{r.desc}</span>
+                  <span
+                    className={cn(
+                      "hidden text-[11px] lg:block",
+                      activeRole ? "text-primary-foreground/80" : "text-muted-foreground",
+                    )}
+                  >
+                    {r.desc}
+                  </span>
                 </span>
               </button>
             );
           })}
         </div>
       </nav>
+
     </header>
   );
 }
