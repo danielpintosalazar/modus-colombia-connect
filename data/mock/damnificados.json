@@ -1,0 +1,42 @@
+[
+  {
+    "id": "dmn-001",
+    "zona_id": "zona-mocoa",
+    "num_familiares": 4,
+    "necesidad_principal": "vivienda",
+    "ubicacion": { "lat": 1.1522, "lng": -76.6459 },
+    "timestamp": "2026-08-26T08:15:00-05:00"
+  },
+  {
+    "id": "dmn-002",
+    "zona_id": "zona-choco",
+    "num_familiares": 6,
+    "necesidad_principal": "agua",
+    "ubicacion": { "lat": 5.6901, "lng": -76.6540 },
+    "timestamp": "2026-08-26T09:40:00-05:00"
+  },
+  {
+    "id": "dmn-003",
+    "zona_id": "zona-choco",
+    "num_familiares": 3,
+    "necesidad_principal": "alimentos",
+    "ubicacion": { "lat": 5.6933, "lng": -76.6602 },
+    "timestamp": "2026-08-26T10:05:00-05:00"
+  },
+  {
+    "id": "dmn-004",
+    "zona_id": "zona-santander",
+    "num_familiares": 5,
+    "necesidad_principal": "salud",
+    "ubicacion": { "lat": 6.7340, "lng": -73.1205 },
+    "timestamp": "2026-08-26T11:20:00-05:00"
+  },
+  {
+    "id": "dmn-005",
+    "zona_id": "zona-guajira",
+    "num_familiares": 7,
+    "necesidad_principal": "agua",
+    "ubicacion": { "lat": 11.3560, "lng": -72.5190 },
+    "timestamp": "2026-08-26T12:00:00-05:00"
+  }
+]

@@ -1,0 +1,17 @@
+node_modules
+.output
+dist
+.vite
+.tanstack
+.nitro
+.wrangler
+.git
+.gitignore
+
+# Nunca meter overrides locales en la imagen: el entorno lo fija docker-compose.
+.env
+.env.local
+*.local
+
+Dockerfile
+.dockerignore

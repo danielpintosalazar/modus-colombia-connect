@@ -1,0 +1,59 @@
+# Levanta backend (FastAPI) + frontend (Vite dev con SSR) para la demo local.
+#
+#   docker compose up --build
+#
+#   Frontend → http://localhost:8080
+#   Backend  → http://localhost:8000   (OpenAPI en /docs, health en /health)
+#
+# El frontend arranca hablando con el backend (VITE_USE_MOCK=false). Si el backend
+# falla, cae solo a los datos mock locales (ver frontend/src/lib/modus-api.ts).
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Back/Dockerfile
+    image: modus-backend
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: docker
+      LOG_LEVEL: INFO
+      # Sin credenciales de Google Cloud: los 3 agentes usan su fallback por reglas
+      # y los endpoints que dependen de Firestore devuelven 503. El portal público
+      # (/zonas/publicas) funciona igual con los datos de data/mock/.
+      AGENTS_FORCE_FALLBACK: "true"
+      EXTERNAL_CALL_TIMEOUT_SECONDS: "8"
+    # Opcional: si existe Back/.env (credenciales reales) se carga; si no, se ignora.
+    env_file:
+      - path: ./Back/.env
+        required: false
+    # ':z' reetiqueta los bind mounts para SELinux (Fedora/RHEL). Inofensivo en otros hosts.
+    volumes:
+      - ./Back/app:/app/app:z
+      - ./Back/scripts:/app/scripts:z
+      - ./data:/data:ro,z
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+    image: modus-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      # URL que usa el navegador — el puerto publicado en el host.
+      VITE_API_URL: http://localhost:8000
+      # URL que usa el render en servidor (SSR), dentro de la red de compose.
+      API_URL_INTERNAL: http://backend:8000
+      VITE_USE_MOCK: "false"
+    volumes:
+      - ./frontend/src:/app/src:z
+      - ./frontend/public:/app/public:z
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -2,11 +2,23 @@ import { useMemo, useState } from "react";
 import { AlertTriangle, Brain, Layers, MapPin, ShieldCheck, Users } from "lucide-react";
 import mapImg from "@/assets/map-colombia.jpg";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { emergencies, fieldTeams, riskZones, type Emergency, type Severity } from "@/lib/modus-data";
+import {
+  emergencies as staticEmergencies,
+  fieldTeams,
+  riskZones,
+  type Emergency,
+  type Severity,
+} from "@/lib/modus-data";
 import { SectionHeading, SeverityBadge, severityDot } from "./common";
 
 const severityFilters: { key: Severity; label: string }[] = [
@@ -15,13 +27,16 @@ const severityFilters: { key: Severity; label: string }[] = [
   { key: "low", label: "Baja" },
 ];
 
-export function EmergencyMap() {
+export function EmergencyMap({ emergencies = staticEmergencies }: { emergencies?: Emergency[] }) {
   const [active, setActive] = useState<Severity[]>(["critical", "medium", "low"]);
   const [showTeams, setShowTeams] = useState(true);
   const [showZones, setShowZones] = useState(true);
   const [selected, setSelected] = useState<Emergency | null>(null);
 
-  const visible = useMemo(() => emergencies.filter((e) => active.includes(e.severity)), [active]);
+  const visible = useMemo(
+    () => emergencies.filter((e) => active.includes(e.severity)),
+    [active, emergencies],
+  );
 
   const toggle = (s: Severity) =>
     setActive((prev) => (prev.includes(s) ? prev.filter((p) => p !== s) : [...prev, s]));
@@ -36,7 +51,6 @@ export function EmergencyMap() {
 
       <div className="grid gap-4 lg:grid-cols-4">
         <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-panel lg:col-span-3">
-
           <img
             src={mapImg}
             alt="Mapa topográfico de Colombia con emergencias activas"
@@ -84,7 +98,12 @@ export function EmergencyMap() {
               aria-label={`Ver detalle de ${e.name}`}
             >
               <span className="relative flex items-center justify-center">
-                <span className={cn("absolute size-4 rounded-full animate-ping-slow", severityDot[e.severity])} />
+                <span
+                  className={cn(
+                    "absolute size-4 rounded-full animate-ping-slow",
+                    severityDot[e.severity],
+                  )}
+                />
                 <span
                   className={cn(
                     "relative flex size-8 items-center justify-center rounded-full border-2 border-background shadow-lg transition-transform hover:scale-115",
@@ -99,7 +118,10 @@ export function EmergencyMap() {
 
           <div className="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-2 text-[11px]">
             {severityFilters.map((s) => (
-              <span key={s.key} className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1">
+              <span
+                key={s.key}
+                className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1"
+              >
                 <span className={cn("size-2 rounded-full", severityDot[s.key])} />
                 {s.label}
               </span>
@@ -165,7 +187,9 @@ export function EmergencyMap() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm font-medium leading-tight">{e.name}</p>
-                    <span className={cn("mt-1 size-2 shrink-0 rounded-full", severityDot[e.severity])} />
+                    <span
+                      className={cn("mt-1 size-2 shrink-0 rounded-full", severityDot[e.severity])}
+                    />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {e.region} · {e.affected.toLocaleString("es-CO")} afectados
@@ -173,7 +197,9 @@ export function EmergencyMap() {
                 </button>
               ))}
               {visible.length === 0 ? (
-                <p className="text-xs text-muted-foreground">Sin emergencias para los filtros activos.</p>
+                <p className="text-xs text-muted-foreground">
+                  Sin emergencias para los filtros activos.
+                </p>
               ) : null}
             </div>
           </div>
@@ -191,7 +217,8 @@ export function EmergencyMap() {
                 </div>
                 <DialogTitle className="text-xl">{selected.name}</DialogTitle>
                 <DialogDescription>
-                  {selected.type} · {selected.region}, {selected.department} · Actualizado {selected.updated}
+                  {selected.type} · {selected.region}, {selected.department} · Actualizado{" "}
+                  {selected.updated}
                 </DialogDescription>
               </DialogHeader>
 
@@ -209,7 +236,10 @@ export function EmergencyMap() {
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {selected.aiNeeds.map((n) => (
-                      <span key={n} className="rounded-full border border-ai/40 px-2 py-0.5 text-xs text-ai">
+                      <span
+                        key={n}
+                        className="rounded-full border border-ai/40 px-2 py-0.5 text-xs text-ai"
+                      >
                         {n}
                       </span>
                     ))}

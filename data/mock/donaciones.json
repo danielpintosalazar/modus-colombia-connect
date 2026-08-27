@@ -1,0 +1,32 @@
+[
+  {
+    "id": "don-001",
+    "donante_id": "usr-donante-1",
+    "tipo": "especie",
+    "sector": "alimentos",
+    "cantidad": 18000,
+    "zona_asignada": "zona-choco",
+    "empresa_beneficiaria_id": "usr-empresa-1",
+    "estado": "en_transito"
+  },
+  {
+    "id": "don-002",
+    "donante_id": "usr-donante-2",
+    "tipo": "dinero",
+    "sector": "vivienda",
+    "cantidad": 8400000000,
+    "zona_asignada": "zona-mocoa",
+    "empresa_beneficiaria_id": null,
+    "estado": "asignada"
+  },
+  {
+    "id": "don-003",
+    "donante_id": "usr-donante-3",
+    "tipo": "especie",
+    "sector": "agua",
+    "cantidad": 4000,
+    "zona_asignada": "zona-guajira",
+    "empresa_beneficiaria_id": "usr-empresa-2",
+    "estado": "pendiente"
+  }
+]

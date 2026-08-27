@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Reglas de seguridad para Firestore. El backend FastAPI usa el Admin SDK
+// (bypassea estas reglas), así que esto protege sobre todo accesos directos
+// desde el cliente (frontend) si en algún momento se decide leer Firestore
+// directamente en vez de pasar siempre por la API — ver docs/frontend_analisis.md.
+
+function estaAutenticado() {
+  return request.auth != null;
+}
+
+function rol() {
+  return request.auth.token.rol;
+}
+
+function esDueno(uid) {
+  return estaAutenticado() && request.auth.uid == uid;
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // usuarios/{uid}: cada quien lee/edita solo su propio documento.
+    match /usuarios/{uid} {
+      allow read: if esDueno(uid) || rol() in ['entidad_respuesta', 'estado'];
+      allow write: if false; // solo el backend (Admin SDK) escribe usuarios/roles
+    }
+
+    // zonas/{zonaId}: lectura pública para cualquier usuario autenticado
+    // (monitoreo de zonas afectadas es información compartida entre todos los roles).
+    match /zonas/{zonaId} {
+      allow read: if estaAutenticado();
+      allow write: if false; // solo el backend (agentes/entidad_respuesta) escribe zonas
+    }
+
+    // damnificados/{id}: el damnificado crea su propio reporte; entidad_respuesta/estado leen todo.
+    match /damnificados/{id} {
+      allow read: if rol() in ['entidad_respuesta', 'estado'];
+      allow create: if rol() == 'damnificado';
+      allow update, delete: if false;
+    }
+
+    // donaciones/{id}: el donante ve/crea las suyas; la empresa beneficiaria ve las asignadas a ella.
+    match /donaciones/{id} {
+      allow read: if estaAutenticado() && (
+        resource.data.donante_id == request.auth.uid ||
+        resource.data.empresa_beneficiaria_id == request.auth.uid ||
+        rol() in ['entidad_respuesta', 'estado']
+      );
+      allow create: if rol() == 'donante' && request.resource.data.donante_id == request.auth.uid;
+      allow update, delete: if false; // solo el backend cambia el estado de una donación
+    }
+
+    // ordenes_despliegue/{id}: solo entidad_respuesta y estado.
+    match /ordenes_despliegue/{id} {
+      allow read: if rol() in ['entidad_respuesta', 'estado'];
+      allow write: if false; // solo lo escriben los agentes vía backend
+    }
+  }
+}

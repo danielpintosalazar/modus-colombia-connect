@@ -1,0 +1,29 @@
+# --- Credenciales / secretos (NUNCA commitear) ---
+.env
+.env.*
+!.env.example
+firebase-key.json
+*-key.json
+*-credentials.json
+*.pem
+
+# --- Python / backend ---
+Back/__pycache__/
+Back/**/__pycache__/
+Back/.venv/
+Back/venv/
+Back/*.egg-info/
+Back/.pytest_cache/
+__pycache__/
+*.pyc
+
+# --- Node / frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.output/
+frontend/.vite/
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/

@@ -9,13 +9,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { coverFor } from "@/lib/covers";
 import { emergencies } from "@/lib/modus-data";
+import { getPublicEmergencies } from "@/lib/modus-api";
 import { donorsFor, initialsOf } from "@/lib/emergency-actors";
 import { AiProgress, SeverityBadge } from "@/components/modus/common";
 import { VictimLightView } from "@/components/modus/VictimLightView";
 
 export const Route = createFileRoute("/emergencia/$id")({
-  loader: ({ params }) => {
-    const emergency = emergencies.find((e) => e.id === params.id);
+  loader: async ({ params }) => {
+    const availableEmergencies = await getPublicEmergencies();
+    const emergency = availableEmergencies.find((e) => e.id === params.id) ?? emergencies.find((e) => e.id === params.id);
     if (!emergency) throw notFound();
     return { emergency };
   },
