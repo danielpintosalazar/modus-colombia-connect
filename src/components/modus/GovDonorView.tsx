@@ -144,8 +144,8 @@ export function GovDonorView() {
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="publico" name="Público" fill="var(--primary)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="privado" name="Privado" fill="var(--csr)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="publico" name="Público" fill="var(--foreground)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="privado" name="Privado" fill="var(--primary)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -156,8 +156,8 @@ export function GovDonorView() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={donutData} dataKey="value" nameKey="name" innerRadius="55%" outerRadius="80%" paddingAngle={3}>
+                    <Cell fill="var(--foreground)" />
                     <Cell fill="var(--primary)" />
-                    <Cell fill="var(--csr)" />
                   </Pie>
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Tooltip
