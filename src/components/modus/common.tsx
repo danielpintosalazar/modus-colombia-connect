@@ -212,11 +212,11 @@ export function DualSparkbars({
   const max = Math.max(...a, ...b, 1);
   return (
     <div>
-      <div className="flex h-12 items-end gap-1.5">
+      <div className="flex h-24 items-end gap-3">
         {a.map((v, i) => (
           <span key={i} className="flex flex-1 items-end gap-0.5">
-            <span className="flex-1 rounded-sm bg-foreground/80" style={{ height: `${(v / max) * 48}px` }} />
-            <span className="flex-1 rounded-sm bg-primary" style={{ height: `${((b[i] ?? 0) / max) * 48}px` }} />
+            <span className="flex-1 rounded-t-[3px] bg-foreground/80" style={{ height: `${Math.max(6, (v / max) * 96)}px` }} />
+            <span className="flex-1 rounded-t-[3px] bg-primary" style={{ height: `${Math.max(6, ((b[i] ?? 0) / max) * 96)}px` }} />
           </span>
         ))}
       </div>
