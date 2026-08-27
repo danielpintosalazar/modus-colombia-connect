@@ -1,0 +1,76 @@
+import { Building2, HeartHandshake, Landmark, Siren, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+export type RoleKey = "publico" | "privado" | "gobierno" | "entidad";
+
+export const roles: { key: RoleKey; label: string; short: string; icon: typeof Users; desc: string }[] = [
+  { key: "publico", label: "Portal Público / Damnificado", short: "Público", icon: Users, desc: "Reporta, consulta y solicita ayuda" },
+  { key: "privado", label: "Donante Sector Privado (RSE)", short: "Privado", icon: Building2, desc: "Invierte y mide impacto RSE" },
+  { key: "gobierno", label: "Donante Sector Público / Gobierno", short: "Gobierno", icon: Landmark, desc: "Prioriza y despacha recursos" },
+  { key: "entidad", label: "Entidad de Respuesta / Operativa", short: "Respuesta", icon: HeartHandshake, desc: "Opera en terreno y reporta avance" },
+];
+
+export function ModusHeader({
+  role,
+  onRoleChange,
+  onReport,
+}: {
+  role: RoleKey;
+  onRoleChange: (r: RoleKey) => void;
+  onReport: () => void;
+}) {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-critical text-critical-foreground">
+            <Siren className="size-4" />
+          </span>
+          <div className="leading-none">
+            <p className="font-display text-lg font-bold tracking-tight">Modus</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              Atención de desastres · Colombia
+            </p>
+          </div>
+        </div>
+
+        <Button
+          variant="destructive"
+          className="ml-auto animate-pulse-ring order-2 sm:order-none"
+          onClick={onReport}
+        >
+          <Siren className="mr-2 size-4" /> Reportar Emergencia
+        </Button>
+      </div>
+
+      <nav className="mx-auto max-w-7xl px-4 pb-3 sm:px-6">
+        <div className="flex gap-2 overflow-x-auto rounded-xl border border-border bg-surface p-1.5">
+          {roles.map((r) => {
+            const Icon = r.icon;
+            const activeRole = role === r.key;
+            return (
+              <button
+                key={r.key}
+                type="button"
+                onClick={() => onRoleChange(r.key)}
+                className={cn(
+                  "flex min-w-fit flex-1 items-center gap-2.5 rounded-lg px-3 py-2 text-left transition-all duration-300",
+                  activeRole
+                    ? "bg-primary/15 text-foreground shadow-glow-ai ring-1 ring-primary/40"
+                    : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+                )}
+              >
+                <Icon className={cn("size-4 shrink-0", activeRole && "text-primary")} />
+                <span className="whitespace-nowrap">
+                  <span className="block text-xs font-semibold sm:text-sm">{r.label}</span>
+                  <span className="hidden text-[11px] text-muted-foreground lg:block">{r.desc}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </header>
+  );
+}
