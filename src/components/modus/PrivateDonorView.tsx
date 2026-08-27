@@ -1,13 +1,14 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Brain, Coins, Leaf, Search, Sparkles, Users } from "lucide-react";
+import { Brain, Check, Loader2, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { initiatives, investmentTypes, regions, type Initiative } from "@/lib/modus-data";
-import { ActorAvatars, AiProgress, SectionHeading, StatCard } from "./common";
+import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 
 const aiTargets = [
@@ -17,12 +18,35 @@ const aiTargets = [
   { sector: "Resiliencia", reason: "Obras de mitigación sin financiar", urgency: "Medio" },
 ];
 
+const matchSteps = ["Consultando prioridad...", "Viendo zonas de referencia...", "Encontrando match..."];
+
 export function PrivateDonorView() {
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("todas");
   const [type, setType] = useState("todos");
   const [minProgress, setMinProgress] = useState([0]);
   const [detail, setDetail] = useState<Initiative | null>(null);
+  const [matching, setMatching] = useState(false);
+  const [step, setStep] = useState(0);
+  const [matched, setMatched] = useState<Initiative[]>([]);
+
+  function runMatch() {
+    setMatched([]);
+    setStep(0);
+    setMatching(true);
+    const timers = [
+      setTimeout(() => setStep(1), 1100),
+      setTimeout(() => setStep(2), 2200),
+      setTimeout(() => {
+        setMatching(false);
+        setMatched(initiatives.slice(0, 3));
+        toast.success("Match completado", {
+          description: "3 iniciativas alineadas con tu estrategia RSE fueron priorizadas.",
+        });
+      }, 3400),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }
 
   const results = useMemo(
     () =>
@@ -36,6 +60,7 @@ export function PrivateDonorView() {
       ),
     [area, type, minProgress, query],
   );
+
 
   return (
     <div className="space-y-14 pb-20">
