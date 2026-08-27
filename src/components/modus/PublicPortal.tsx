@@ -108,58 +108,14 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
       <section id="emergencias" className="scroll-mt-24">
         <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">Emergencias activas</h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA y las entidades que ya
-          están operando en terreno.
+          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA, las entidades que operan
+          en terreno y los donantes que financian la respuesta.
         </p>
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {emergencies.map((e) => (
-            <article
-              key={e.id}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-panel"
-            >
-              <div className="relative">
-                <img
-                  src={coverFor(e.region)}
-                  alt={`${e.type} en ${e.region}`}
-                  width={1024}
-                  height={640}
-                  loading="lazy"
-                  className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
-                  <MapPin className="size-3.5 text-primary" /> {e.region}, {e.department}
-                </span>
-                <span className="absolute right-3 top-3">
-                  <SeverityBadge severity={e.severity} className="bg-background/90 backdrop-blur" />
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <h3 className="text-base font-semibold leading-snug">{e.name}</h3>
-                <p className="mt-1 text-xs text-muted-foreground">{e.type}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {e.aiNeeds.slice(0, 3).map((n) => (
-                    <span
-                      key={n}
-                      className="rounded-full border border-border bg-surface px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-                    >
-                      {n}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-                  <ActorAvatars actors={e.teams.map(initials)} max={3} />
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Users className="size-3.5" /> {e.affected.toLocaleString("es-CO")}
-                  </span>
-                </div>
-                <Button variant="outline" className="mt-4 w-full rounded-full" onClick={() => setEmergency(e)}>
-                  Ver detalle de la emergencia
-                </Button>
-              </div>
-            </article>
-          ))}
+        <div className="mt-8">
+          <EmergencyCarousel />
         </div>
       </section>
+
 
       {/* VISTA DAMNIFICADO */}
       <section id="lightweight" className="scroll-mt-24">
