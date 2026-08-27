@@ -1,13 +1,14 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Brain, Coins, Leaf, Search, Sparkles, Users } from "lucide-react";
+import { Brain, Check, Loader2, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { initiatives, investmentTypes, regions, type Initiative } from "@/lib/modus-data";
-import { ActorAvatars, AiProgress, SectionHeading, StatCard } from "./common";
+import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 
 const aiTargets = [
@@ -17,12 +18,35 @@ const aiTargets = [
   { sector: "Resiliencia", reason: "Obras de mitigación sin financiar", urgency: "Medio" },
 ];
 
+const matchSteps = ["Consultando prioridad...", "Viendo zonas de referencia...", "Encontrando match..."];
+
 export function PrivateDonorView() {
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("todas");
   const [type, setType] = useState("todos");
   const [minProgress, setMinProgress] = useState([0]);
   const [detail, setDetail] = useState<Initiative | null>(null);
+  const [matching, setMatching] = useState(false);
+  const [step, setStep] = useState(0);
+  const [matched, setMatched] = useState<Initiative[]>([]);
+
+  function runMatch() {
+    setMatched([]);
+    setStep(0);
+    setMatching(true);
+    const timers = [
+      setTimeout(() => setStep(1), 1100),
+      setTimeout(() => setStep(2), 2200),
+      setTimeout(() => {
+        setMatching(false);
+        setMatched(initiatives.slice(0, 3));
+        toast.success("Match completado", {
+          description: "3 iniciativas alineadas con tu estrategia RSE fueron priorizadas.",
+        });
+      }, 3400),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }
 
   const results = useMemo(
     () =>
@@ -37,98 +61,17 @@ export function PrivateDonorView() {
     [area, type, minProgress, query],
   );
 
+
   return (
     <div className="space-y-14 pb-20">
-      <section>
-        <SectionHeading
-          eyebrow="Responsabilidad Social Empresarial"
-          title="Balance de impacto — Grupo Energía Andina"
-          description="Consolidado de tu inversión social en los tres ejes de sostenibilidad, con trazabilidad verificada en campo."
-        />
-        <div className="grid gap-4 lg:grid-cols-3">
-          <div className="rounded-2xl border border-csr/30 bg-csr-panel p-6">
-            <div className="mb-4 flex items-center gap-2 text-csr">
-              <Leaf className="size-4" />
-              <p className="metric-label text-csr">Eje ambiental</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="font-display text-3xl font-semibold text-csr">1.842 ha</p>
-                <p className="text-xs text-muted-foreground">Hectáreas reforestadas</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <p className="font-semibold">96.000</p>
-                  <p className="text-xs text-muted-foreground">Árboles nativos</p>
-                </div>
-                <div>
-                  <p className="font-semibold">14.200 t</p>
-                  <p className="text-xs text-muted-foreground">CO₂ mitigado</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-primary/30 bg-ai-panel p-6">
-            <div className="mb-4 flex items-center gap-2 text-primary">
-              <Users className="size-4" />
-              <p className="metric-label text-primary">Eje social</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="font-display text-3xl font-semibold text-primary">7.640</p>
-                <p className="text-xs text-muted-foreground">Familias asistidas</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <p className="font-semibold">24.800</p>
-                  <p className="text-xs text-muted-foreground">Kits entregados</p>
-                </div>
-                <div>
-                  <p className="font-semibold">3.120</p>
-                  <p className="text-xs text-muted-foreground">Menores atendidos</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-warning/30 bg-critical-panel p-6">
-            <div className="mb-4 flex items-center gap-2 text-warning">
-              <Coins className="size-4" />
-              <p className="metric-label text-warning">Eje económico</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="font-display text-3xl font-semibold text-warning">$11.400M</p>
-                <p className="text-xs text-muted-foreground">Ingresos locales generados (COP)</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <p className="font-semibold">640</p>
-                  <p className="text-xs text-muted-foreground">Empleos temporales</p>
-                </div>
-                <div>
-                  <p className="font-semibold">2,4x</p>
-                  <p className="text-xs text-muted-foreground">Multiplicador social</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <StatCard label="Inversión ejecutada 2026" value="$4.820M COP" tone="csr" hint="87% de la meta anual" />
-          <StatCard label="Iniciativas apoyadas" value="14" tone="ai" hint="9 en proceso · 5 concluidas" />
-          <StatCard label="Cobertura territorial" value="6 departamentos" hint="Putumayo, Chocó, Cundinamarca y más" />
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-ai/40 bg-ai-panel p-6">
+      <section className="rounded-3xl border border-border bg-surface p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-ai/20 text-ai">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Brain className="size-5" />
             </span>
             <div>
-              <p className="metric-label text-ai">Recomendación priorizada por IA</p>
+              <p className="metric-label text-primary">Iniciativas recomendadas por IA</p>
               <h3 className="mt-1 text-lg font-semibold">
                 Tu portafolio genera mayor impacto marginal en Alimentos y Salud
               </h3>
@@ -138,29 +81,23 @@ export function PrivateDonorView() {
               </p>
             </div>
           </div>
-          <Button
-            onClick={() =>
-              toast.success("Portafolio sugerido generado", {
-                description: "3 iniciativas recomendadas fueron añadidas a tu lista de evaluación.",
-              })
-            }
-          >
-            <Sparkles className="mr-2 size-4" /> Ver portafolio sugerido
+          <Button onClick={runMatch}>
+            <Sparkles className="mr-2 size-4" /> Hacer Match con Iniciativas
           </Button>
         </div>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {aiTargets.map((t) => (
-            <div key={t.sector} className="rounded-xl border border-ai/30 bg-surface/60 p-4">
+            <div key={t.sector} className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">{t.sector}</p>
                 <span
                   className={cn(
                     "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
                     t.urgency === "Crítico"
-                      ? "bg-critical/20 text-critical"
+                      ? "bg-primary text-primary-foreground"
                       : t.urgency === "Alto"
-                        ? "bg-warning/20 text-warning"
-                        : "bg-low/20 text-low",
+                        ? "bg-primary/15 text-primary"
+                        : "bg-muted text-muted-foreground",
                   )}
                 >
                   {t.urgency}
@@ -170,7 +107,46 @@ export function PrivateDonorView() {
             </div>
           ))}
         </div>
+
+        {matched.length > 0 ? (
+          <div className="animate-rise mt-5 rounded-2xl border border-primary/30 bg-csr-panel p-5">
+            <p className="metric-label mb-3 text-primary">Match encontrado · {matched.length} iniciativas</p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {matched.map((i) => (
+                <button
+                  key={i.id}
+                  type="button"
+                  onClick={() => setDetail(i)}
+                  className="rounded-xl border border-border bg-card p-4 text-left transition-colors hover:border-primary/60"
+                >
+                  <p className="text-sm font-semibold leading-snug">{i.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {i.region} · {i.budget}
+                  </p>
+                  <div className="mt-3">
+                    <AiProgress value={i.progress} label="Avance" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </section>
+
+      <section>
+        <SectionHeading
+          eyebrow="Responsabilidad Social Empresarial"
+          title="Cifras de impacto — Grupo Energía Andina"
+          description="Consolidado de tu inversión social con tendencia mensual verificada en campo."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiCard label="Hectáreas reforestadas" value="1.842 ha" trend="+8%" hint="96.000 árboles nativos" data={[820, 1010, 1180, 1340, 1520, 1690, 1842]} chart="line" />
+          <KpiCard label="Familias asistidas" value="7.640" trend="+11%" hint="24.800 kits entregados" data={[3100, 3900, 4600, 5400, 6200, 6980, 7640]} />
+          <KpiCard label="Ingresos locales generados" value="$11.400M" trend="+2,4x" hint="640 empleos temporales" data={[3.2, 4.4, 5.6, 7.1, 8.6, 10.1, 11.4]} chart="line" />
+          <KpiCard label="Inversión ejecutada 2026" value="$4.820M" trend="87%" hint="14 iniciativas · 6 departamentos" data={[0.6, 1.2, 1.9, 2.6, 3.4, 4.1, 4.82]} />
+        </div>
+      </section>
+
 
       <section>
         <SectionHeading
@@ -217,7 +193,7 @@ export function PrivateDonorView() {
           <div className="lg:col-span-4">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="metric-label">Avance mínimo</span>
-              <span className="font-semibold text-ai">{minProgress[0]}%</span>
+              <span className="font-semibold text-primary">{minProgress[0]}%</span>
             </div>
             <Slider value={minProgress} onValueChange={setMinProgress} max={100} step={5} />
           </div>
@@ -269,6 +245,42 @@ export function PrivateDonorView() {
       </section>
 
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
+
+      <Dialog open={matching} onOpenChange={() => {}}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Brain className="size-4 text-primary" /> Motor de match Modus IA
+            </DialogTitle>
+            <DialogDescription>Cruzando tu estrategia RSE con las necesidades priorizadas.</DialogDescription>
+          </DialogHeader>
+          <ul className="space-y-3">
+            {matchSteps.map((s, i) => (
+              <li
+                key={s}
+                className={cn(
+                  "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-all",
+                  i < step
+                    ? "border-primary/40 bg-primary/5 text-foreground"
+                    : i === step
+                      ? "border-primary bg-card font-semibold"
+                      : "border-border bg-surface text-muted-foreground",
+                )}
+              >
+                {i < step ? (
+                  <Check className="size-4 shrink-0 text-primary" />
+                ) : i === step ? (
+                  <Loader2 className="size-4 shrink-0 animate-spin text-primary" />
+                ) : (
+                  <span className="size-4 shrink-0 rounded-full border border-input" />
+                )}
+                {s}
+              </li>
+            ))}
+          </ul>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
