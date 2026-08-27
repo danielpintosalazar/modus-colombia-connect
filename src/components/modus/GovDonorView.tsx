@@ -33,7 +33,7 @@ import {
   stateEntities,
   type CollectionCenter,
 } from "@/lib/modus-data";
-import { SectionHeading, SeverityBadge, StatCard } from "./common";
+import { DualSparkbars, KpiCard, SectionHeading, SeverityBadge } from "./common";
 
 const statusTone: Record<string, string> = {
   Disponible: "border-csr/40 bg-csr/15 text-csr",
