@@ -247,7 +247,7 @@ export function PrivateDonorView() {
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
 
       <Dialog open={matching} onOpenChange={() => {}}>
-        <DialogContent className="max-w-sm" showCloseButton={false}>
+        <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
               <Brain className="size-4 text-primary" /> Motor de match Modus IA
