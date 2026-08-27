@@ -68,6 +68,14 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
         </div>
       </section>
 
+      <ActorCards
+        onReport={onReport}
+        onBeneficiary={() => setVictimView(true)}
+        onRole={(r) => onRoleChange(r)}
+      />
+
+
+
       {/* ESTADÍSTICAS */}
       <section id="estadisticas" className="scroll-mt-24">
         <SectionHeading
