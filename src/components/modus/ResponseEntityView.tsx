@@ -181,7 +181,7 @@ export function ResponseEntityView() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="fr-need">Necesidad atendida</Label>
-            <Select defaultValue={needs[0]?.id}>
+            <Select defaultValue={needs[0]?.id ?? ""}>
               <SelectTrigger id="fr-need">
                 <SelectValue />
               </SelectTrigger>
