@@ -1,0 +1,10 @@
+[
+  { "uid": "usr-damnificado-1", "rol": "damnificado", "nombre": "Damnificado Demo", "email": "damnificado.demo@modus.local" },
+  { "uid": "usr-donante-1", "rol": "donante", "nombre": "Postobón S.A.", "email": "donante1.demo@modus.local" },
+  { "uid": "usr-donante-2", "rol": "donante", "nombre": "Cementos del Pacífico", "email": "donante2.demo@modus.local" },
+  { "uid": "usr-donante-3", "rol": "donante", "nombre": "Donante Particular Demo", "email": "donante3.demo@modus.local" },
+  { "uid": "usr-empresa-1", "rol": "empresa_beneficiaria", "nombre": "Cruz Roja Colombiana", "email": "empresa1.demo@modus.local" },
+  { "uid": "usr-empresa-2", "rol": "empresa_beneficiaria", "nombre": "ICBF Regional Guajira", "email": "empresa2.demo@modus.local" },
+  { "uid": "usr-entidad-1", "rol": "estado_entidad_respuesta", "nombre": "UNGRD Coordinación Nacional", "email": "entidad1.demo@modus.local" },
+  { "uid": "usr-estado-1", "rol": "estado_entidad_respuesta", "nombre": "Estado Colombiano — Panel Nacional", "email": "estado1.demo@modus.local" }
+]

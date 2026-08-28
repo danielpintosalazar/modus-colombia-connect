@@ -1,0 +1,56 @@
+[
+  {
+    "id": "nec-choco-alimentos",
+    "zona_id": "zona-choco",
+    "tipo_necesidad": "18.000 kits alimentarios para corregimientos ribereños",
+    "fuente": "agente_diagnostico",
+    "estado": "vinculada",
+    "entidad_vinculada_id": "usr-estado-entidad-1",
+    "timestamp": "2026-08-27T14:05:00Z"
+  },
+  {
+    "id": "nec-mocoa-albergue",
+    "zona_id": "zona-mocoa",
+    "tipo_necesidad": "Albergue temporal para 420 familias en zona segura",
+    "fuente": "agente_diagnostico",
+    "estado": "abierta",
+    "entidad_vinculada_id": null,
+    "timestamp": "2026-08-27T15:20:00Z"
+  },
+  {
+    "id": "nec-choco-agua",
+    "zona_id": "zona-choco",
+    "tipo_necesidad": "Potabilización comunitaria 40.000 L/día",
+    "fuente": "sistema_riesgo",
+    "estado": "abierta",
+    "entidad_vinculada_id": null,
+    "timestamp": "2026-08-27T16:00:00Z"
+  },
+  {
+    "id": "nec-cundinamarca-salud",
+    "zona_id": "zona-cundinamarca",
+    "tipo_necesidad": "Brigadas médicas y salud respiratoria por humo",
+    "fuente": "manual",
+    "estado": "cubierta",
+    "entidad_vinculada_id": "usr-estado-entidad-1",
+    "timestamp": "2026-08-26T09:30:00Z"
+  },
+  {
+    "id": "nec-santander-estructural",
+    "zona_id": "zona-santander",
+    "tipo_necesidad": "Evaluación estructural de 260 viviendas post-sismo",
+    "fuente": "manual",
+    "estado": "vinculada",
+    "entidad_vinculada_id": "usr-estado-entidad-1",
+    "timestamp": "2026-08-27T11:10:00Z"
+  },
+  {
+    "id": "nec-guajira-nutricion",
+    "zona_id": "zona-guajira",
+    "tipo_necesidad": "Complementación nutricional infantil comunidades wayúu",
+    "fuente": "sistema_riesgo",
+    "estado": "abierta",
+    "entidad_vinculada_id": null,
+    "timestamp": "2026-08-27T17:45:00Z"
+  }
+]

@@ -1,0 +1,26 @@
+# Contexto de build de la imagen backend = raíz del repo. Mantenerlo mínimo:
+# el Dockerfile solo copia Back/requirements.txt, Back/app, Back/scripts y data/.
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+
+Back/.venv
+Back/venv
+Back/tests
+Back/*.egg-info
+
+frontend
+docs
+data/images
+
+*.md
+**/.env
+**/.env.*
+!**/.env.example
+
+.dockerignore
+docker-compose.yml

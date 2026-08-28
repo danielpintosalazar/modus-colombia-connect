@@ -1,13 +1,31 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Brain, Check, Loader2, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
-import { initiatives, investmentTypes, regions, type Initiative } from "@/lib/modus-data";
+import {
+  initiatives as mockInitiatives,
+  investmentTypes,
+  regions,
+  type Initiative,
+} from "@/lib/modus-data";
+import { getMisDonaciones, getPublicInitiatives } from "@/lib/modus-api";
 import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 
@@ -18,7 +36,11 @@ const aiTargets = [
   { sector: "Resiliencia", reason: "Obras de mitigación sin financiar", urgency: "Medio" },
 ];
 
-const matchSteps = ["Consultando prioridad...", "Viendo zonas de referencia...", "Encontrando match..."];
+const matchSteps = [
+  "Consultando prioridad...",
+  "Viendo zonas de referencia...",
+  "Encontrando match...",
+];
 
 export function PrivateDonorView() {
   const [query, setQuery] = useState("");
@@ -29,6 +51,17 @@ export function PrivateDonorView() {
   const [matching, setMatching] = useState(false);
   const [step, setStep] = useState(0);
   const [matched, setMatched] = useState<Initiative[]>([]);
+  const [remoteInitiatives, setRemoteInitiatives] = useState<Initiative[] | null>(null);
+  const [misDonaciones, setMisDonaciones] = useState<
+    { id: string; sector: string; cantidad: number; estado: string }[] | null
+  >(null);
+
+  const initiatives = remoteInitiatives ?? mockInitiatives;
+
+  useEffect(() => {
+    void getPublicInitiatives().then(setRemoteInitiatives);
+    void getMisDonaciones("privado").then(setMisDonaciones);
+  }, []);
 
   function runMatch() {
     setMatched([]);
@@ -58,9 +91,8 @@ export function PrivateDonorView() {
           (i.title.toLowerCase().includes(query.toLowerCase()) ||
             i.description.toLowerCase().includes(query.toLowerCase())),
       ),
-    [area, type, minProgress, query],
+    [area, type, minProgress, query, initiatives],
   );
-
 
   return (
     <div className="space-y-14 pb-20">
@@ -76,8 +108,8 @@ export function PrivateDonorView() {
                 Tu portafolio genera mayor impacto marginal en Alimentos y Salud
               </h3>
               <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                El motor de priorización cruza severidad, población afectada y accesibilidad logística para
-                recomendar dónde tu próximo aporte multiplica el impacto.
+                El motor de priorización cruza severidad, población afectada y accesibilidad
+                logística para recomendar dónde tu próximo aporte multiplica el impacto.
               </p>
             </div>
           </div>
@@ -110,7 +142,9 @@ export function PrivateDonorView() {
 
         {matched.length > 0 ? (
           <div className="animate-rise mt-5 rounded-2xl border border-primary/30 bg-csr-panel p-5">
-            <p className="metric-label mb-3 text-primary">Match encontrado · {matched.length} iniciativas</p>
+            <p className="metric-label mb-3 text-primary">
+              Match encontrado · {matched.length} iniciativas
+            </p>
             <div className="grid gap-3 sm:grid-cols-3">
               {matched.map((i) => (
                 <button
@@ -140,13 +174,57 @@ export function PrivateDonorView() {
           description="Consolidado de tu inversión social con tendencia mensual verificada en campo."
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiCard label="Hectáreas reforestadas" value="1.842 ha" trend="+8%" hint="96.000 árboles nativos" data={[820, 1010, 1180, 1340, 1520, 1690, 1842]} chart="line" />
-          <KpiCard label="Familias asistidas" value="7.640" trend="+11%" hint="24.800 kits entregados" data={[3100, 3900, 4600, 5400, 6200, 6980, 7640]} />
-          <KpiCard label="Ingresos locales generados" value="$11.400M" trend="+2,4x" hint="640 empleos temporales" data={[3.2, 4.4, 5.6, 7.1, 8.6, 10.1, 11.4]} chart="line" />
-          <KpiCard label="Inversión ejecutada 2026" value="$4.820M" trend="87%" hint="14 iniciativas · 6 departamentos" data={[0.6, 1.2, 1.9, 2.6, 3.4, 4.1, 4.82]} />
+          <KpiCard
+            label="Hectáreas reforestadas"
+            value="1.842 ha"
+            trend="+8%"
+            hint="96.000 árboles nativos"
+            data={[820, 1010, 1180, 1340, 1520, 1690, 1842]}
+            chart="line"
+          />
+          <KpiCard
+            label="Familias asistidas"
+            value="7.640"
+            trend="+11%"
+            hint="24.800 kits entregados"
+            data={[3100, 3900, 4600, 5400, 6200, 6980, 7640]}
+          />
+          <KpiCard
+            label="Ingresos locales generados"
+            value="$11.400M"
+            trend="+2,4x"
+            hint="640 empleos temporales"
+            data={[3.2, 4.4, 5.6, 7.1, 8.6, 10.1, 11.4]}
+            chart="line"
+          />
+          <KpiCard
+            label="Inversión ejecutada 2026"
+            value="$4.820M"
+            trend="87%"
+            hint="14 iniciativas · 6 departamentos"
+            data={[0.6, 1.2, 1.9, 2.6, 3.4, 4.1, 4.82]}
+          />
         </div>
       </section>
 
+      {misDonaciones && misDonaciones.length > 0 ? (
+        <section>
+          <SectionHeading eyebrow="En vivo · Firestore" title="Mis aportes registrados" />
+          <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+            {misDonaciones.map((d) => (
+              <div
+                key={d.id}
+                className="flex items-center justify-between border-b border-border px-4 py-3 text-sm last:border-b-0"
+              >
+                <span className="font-mono text-xs text-muted-foreground">{d.id.slice(0, 8)}</span>
+                <span className="capitalize">{d.sector}</span>
+                <span className="font-semibold">{d.cantidad.toLocaleString("es-CO")}</span>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{d.estado}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section>
         <SectionHeading
@@ -201,7 +279,10 @@ export function PrivateDonorView() {
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {results.map((i) => (
-            <article key={i.id} className="flex flex-col rounded-2xl border border-border bg-surface p-5">
+            <article
+              key={i.id}
+              className="flex flex-col rounded-2xl border border-border bg-surface p-5"
+            >
               <div className="mb-3 flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">
                   {i.area}
@@ -222,14 +303,7 @@ export function PrivateDonorView() {
                 <ActorAvatars actors={i.actors} />
               </div>
               <div className="mt-4 flex gap-2">
-                <Button
-                  className="flex-1"
-                  onClick={() =>
-                    toast.success("Inversión iniciada", {
-                      description: `${i.title} — se generó la orden de aporte con trazabilidad Modus.`,
-                    })
-                  }
-                >
+                <Button className="flex-1" onClick={() => setDetail(i)}>
                   Invertir / Donar
                 </Button>
                 <Button variant="outline" onClick={() => setDetail(i)}>
@@ -239,7 +313,9 @@ export function PrivateDonorView() {
             </article>
           ))}
           {results.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No hay iniciativas para los filtros seleccionados.</p>
+            <p className="text-sm text-muted-foreground">
+              No hay iniciativas para los filtros seleccionados.
+            </p>
           ) : null}
         </div>
       </section>
@@ -252,7 +328,9 @@ export function PrivateDonorView() {
             <DialogTitle className="flex items-center gap-2 text-base">
               <Brain className="size-4 text-primary" /> Motor de match Modus IA
             </DialogTitle>
-            <DialogDescription>Cruzando tu estrategia RSE con las necesidades priorizadas.</DialogDescription>
+            <DialogDescription>
+              Cruzando tu estrategia RSE con las necesidades priorizadas.
+            </DialogDescription>
           </DialogHeader>
           <ul className="space-y-3">
             {matchSteps.map((s, i) => (
@@ -281,6 +359,5 @@ export function PrivateDonorView() {
         </DialogContent>
       </Dialog>
     </div>
-
   );
 }

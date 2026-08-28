@@ -1,0 +1,42 @@
+[
+  {
+    "id": "zona-mocoa",
+    "nombre": "Deslizamiento sector San Miguel — Mocoa, Putumayo",
+    "ubicacion": { "lat": 1.1519, "lng": -76.6464, "radio_km": 5 },
+    "severidad": "critica",
+    "sector_necesidad": ["vivienda", "salud", "agua"],
+    "poblacion_afectada": 12840
+  },
+  {
+    "id": "zona-cundinamarca",
+    "nombre": "Incendio forestal Cerros Orientales — Cundinamarca",
+    "ubicacion": { "lat": 4.65, "lng": -74.05, "radio_km": 8 },
+    "severidad": "media",
+    "sector_necesidad": ["salud", "energia"],
+    "poblacion_afectada": 4310
+  },
+  {
+    "id": "zona-choco",
+    "nombre": "Inundación cuenca río Atrato — Chocó",
+    "ubicacion": { "lat": 5.6919, "lng": -76.6583, "radio_km": 15 },
+    "severidad": "critica",
+    "sector_necesidad": ["alimentos", "agua", "transporte"],
+    "poblacion_afectada": 21560
+  },
+  {
+    "id": "zona-guajira",
+    "nombre": "Sequía y desabastecimiento hídrico — La Guajira",
+    "ubicacion": { "lat": 11.3548, "lng": -72.5205, "radio_km": 20 },
+    "severidad": "baja",
+    "sector_necesidad": ["agua", "alimentos"],
+    "poblacion_afectada": 8900
+  },
+  {
+    "id": "zona-santander",
+    "nombre": "Sismo superficial 5.1 Mw — Los Santos, Santander",
+    "ubicacion": { "lat": 6.7331, "lng": -73.1198, "radio_km": 6 },
+    "severidad": "media",
+    "sector_necesidad": ["vivienda", "salud"],
+    "poblacion_afectada": 3120
+  }
+]

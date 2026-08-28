@@ -4,16 +4,46 @@ import { Brain, Building2, HandCoins, Package, TrendingUp, Users } from "lucide-
 import t0 from "@/assets/mocoa-t0.jpg";
 import t1 from "@/assets/mocoa-t1.jpg";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { Initiative } from "@/lib/modus-data";
+import { crearDonacion, type DonacionInput } from "@/lib/modus-api";
 import { ActorAvatars, AiProgress } from "./common";
+
+const regionZona: Record<string, string> = {
+  Mocoa: "zona-mocoa",
+  Cundinamarca: "zona-cundinamarca",
+  Chocó: "zona-choco",
+  "La Guajira": "zona-guajira",
+  Santander: "zona-santander",
+};
+const typeSector: Record<string, DonacionInput["sector"]> = {
+  "Servicios Esenciales": "salud",
+  "Resiliencia Territorial": "vivienda",
+  "Recuperación de Ingresos": "alimentos",
+  "Redes de apoyo social": "salud",
+};
 
 function BeforeAfter() {
   const [pos, setPos] = useState(50);
   return (
     <div className="space-y-2">
       <div className="relative overflow-hidden rounded-xl border border-border">
-        <img src={t1} alt="Estado T1 tras la intervención" width={1024} height={640} loading="lazy" className="block h-56 w-full object-cover sm:h-64" />
+        <img
+          src={t1}
+          alt="Estado T1 tras la intervención"
+          width={1024}
+          height={640}
+          loading="lazy"
+          className="block h-56 w-full object-cover sm:h-64"
+        />
         <div className="absolute inset-0 overflow-hidden" style={{ width: `${pos}%` }}>
           <img
             src={t0}
@@ -43,8 +73,8 @@ function BeforeAfter() {
         className="w-full accent-[var(--primary)]"
       />
       <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Brain className="size-3 text-ai" /> Progreso evolutivo validado por visión computacional sobre imágenes
-        georreferenciadas.
+        <Brain className="size-3 text-ai" /> Progreso evolutivo validado por visión computacional
+        sobre imágenes georreferenciadas.
       </p>
     </div>
   );
@@ -57,6 +87,36 @@ export function InitiativeDetailDialog({
   initiative: Initiative | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const [monto, setMonto] = useState("5000000");
+  const [busy, setBusy] = useState(false);
+
+  const donar = async () => {
+    if (!initiative) return;
+    setBusy(true);
+    try {
+      const res = await crearDonacion(
+        {
+          tipo: "dinero",
+          sector: typeSector[initiative.investmentType] ?? "vivienda",
+          cantidad: Math.max(1, Number(monto) || 1),
+          zona_asignada: regionZona[initiative.region] ?? null,
+        },
+        "privado",
+      );
+      onOpenChange(false);
+      toast.success("Donación registrada", {
+        description: `${initiative.title} — donación ${res.id.slice(0, 8)} en estado "${res.estado}".`,
+      });
+    } catch {
+      onOpenChange(false);
+      toast.success("Intención de inversión registrada (modo local)", {
+        description: `${initiative.title} — un asesor de la entidad responsable te contactará.`,
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <Dialog open={!!initiative} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
@@ -114,28 +174,34 @@ export function InitiativeDetailDialog({
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  className="flex-1"
-                  onClick={() => {
-                    onOpenChange(false);
-                    toast.success("Intención de inversión registrada", {
-                      description: `${initiative.title} — un asesor de la entidad responsable te contactará.`,
-                    });
-                  }}
-                >
-                  Invertir / Donar
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    toast.info("Reporte de impacto generado", {
-                      description: "Se descargará el PDF con la trazabilidad T0 → T1 de la iniciativa.",
-                    })
-                  }
-                >
-                  Descargar reporte
-                </Button>
+              <div className="rounded-xl border border-border bg-surface-strong/50 p-4">
+                <Label htmlFor="don-monto" className="metric-label">
+                  Monto a aportar (COP)
+                </Label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Input
+                    id="don-monto"
+                    type="number"
+                    min={1}
+                    value={monto}
+                    onChange={(e) => setMonto(e.target.value)}
+                    className="max-w-[200px]"
+                  />
+                  <Button className="flex-1" disabled={busy} onClick={() => void donar()}>
+                    {busy ? "Registrando…" : "Invertir / Donar"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      toast.info("Reporte de impacto generado", {
+                        description:
+                          "Se descargará el PDF con la trazabilidad T0 → T1 de la iniciativa.",
+                      })
+                    }
+                  >
+                    Descargar reporte
+                  </Button>
+                </div>
               </div>
             </div>
           </>

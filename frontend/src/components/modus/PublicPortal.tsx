@@ -3,24 +3,50 @@ import { Activity, Award, HeartHandshake, Search, Siren, Smartphone, Trophy } fr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { coverFor } from "@/lib/covers";
-import { donors, emergencies, initiatives, regions, type Initiative } from "@/lib/modus-data";
+import type { Metrics } from "@/lib/modus-api";
+import {
+  donors,
+  emergencies as staticEmergencies,
+  initiatives as staticInitiatives,
+  regions,
+  type Emergency,
+  type Initiative,
+} from "@/lib/modus-data";
 import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
 import { ActorCards } from "./ActorCards";
 import { EmergencyCarousel } from "./EmergencyCarousel";
 import { EmergencyMap } from "./EmergencyMap";
+import { OrquestadorChat } from "./OrquestadorChat";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 import { VictimLightView } from "./VictimLightView";
 import type { RoleKey } from "./RoleSwitcher";
 
-export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void; onRoleChange: (r: RoleKey) => void }) {
+export function PublicPortal({
+  onReport,
+  onRoleChange,
+  emergencies = staticEmergencies,
+  initiatives = staticInitiatives,
+  metrics = null,
+}: {
+  onReport: () => void;
+  onRoleChange: (r: RoleKey) => void;
+  emergencies?: Emergency[];
+  initiatives?: Initiative[];
+  metrics?: Metrics | null;
+}) {
   const [region, setRegion] = useState<string>("todas");
   const [query, setQuery] = useState("");
   const [detail, setDetail] = useState<Initiative | null>(null);
   const [victimView, setVictimView] = useState(false);
-
 
   const q = query.trim().toLowerCase();
   const filtered = initiatives.filter(
@@ -28,19 +54,23 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
       (region === "todas" || i.region === region) &&
       (q === "" || i.title.toLowerCase().includes(q) || i.region.toLowerCase().includes(q)),
   );
-  const totalAffected = emergencies.reduce((a, e) => a + e.affected, 0);
+  const totalAffected =
+    metrics?.poblacionAfectadaTotal ?? emergencies.reduce((a, e) => a + e.affected, 0);
 
   return (
     <div className="space-y-20 pb-20">
       {/* HERO */}
       <section className="pt-6 text-center sm:pt-14">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <Activity className="size-3.5 text-primary" /> {emergencies.length} emergencias activas en Colombia
+          <Activity className="size-3.5 text-primary" /> {emergencies.length} emergencias activas en
+          Colombia
         </span>
-        <h1 className="mx-auto mt-6 font-display text-6xl font-bold tracking-tight sm:text-8xl">Modus</h1>
+        <h1 className="mx-auto mt-6 font-display text-6xl font-bold tracking-tight sm:text-8xl">
+          Modus
+        </h1>
         <p className="mx-auto mt-5 max-w-2xl text-balance text-lg text-muted-foreground">
-          Tú también puedes ayudar. Coordinación, asignación de recursos y seguimiento en tiempo real de la atención
-          de desastres en Colombia.
+          Tú también puedes ayudar. Coordinación, asignación de recursos y seguimiento en tiempo
+          real de la atención de desastres en Colombia.
         </p>
 
         <div className="mx-auto mt-8 flex max-w-xl flex-col gap-2 rounded-3xl border border-border bg-card p-2 shadow-panel sm:flex-row sm:items-center sm:rounded-full">
@@ -74,8 +104,6 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
         onRole={(r) => onRoleChange(r)}
       />
 
-
-
       {/* ESTADÍSTICAS */}
       <section id="estadisticas" className="scroll-mt-24">
         <SectionHeading
@@ -94,7 +122,7 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
           <KpiCard
             label="Iniciativas activas"
             value={String(initiatives.filter((i) => i.status === "En Proceso").length)}
-            hint="Con validación por IA"
+            hint={metrics ? `${metrics.zonasCriticas} zonas críticas` : "Con validación por IA"}
             trend="+3"
             data={[2, 3, 3, 4, 4, 5, 6]}
           />
@@ -106,24 +134,42 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
             data={[12, 16, 19, 22, 26, 29, 32]}
             chart="line"
           />
-          <KpiCard label="Entidades desplegadas" value="18" hint="UNGRD, Defensa Civil, Cruz Roja y más" data={[8, 10, 11, 13, 15, 16, 18]} />
+          <KpiCard
+            label="Entidades desplegadas"
+            value="18"
+            hint="UNGRD, Defensa Civil, Cruz Roja y más"
+            data={[8, 10, 11, 13, 15, 16, 18]}
+          />
         </div>
       </section>
 
-      <EmergencyMap />
+      <EmergencyMap emergencies={emergencies} />
 
       {/* EMERGENCIAS */}
       <section id="emergencias" className="scroll-mt-24">
-        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">Emergencias activas</h2>
+        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
+          Emergencias activas
+        </h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA, las entidades que operan
-          en terreno y los donantes que financian la respuesta.
+          Cada emergencia integra fuentes oficiales de riesgo, necesidades detectadas por IA, las
+          entidades que operan en terreno y los donantes que financian la respuesta.
         </p>
         <div className="mt-8">
-          <EmergencyCarousel />
+          <EmergencyCarousel emergencies={emergencies} />
         </div>
       </section>
 
+      {/* AGENTE ORQUESTADOR */}
+      <section id="asistente" className="scroll-mt-24">
+        <SectionHeading
+          eyebrow="Asistente con IA"
+          title="Habla con el Agente Orquestador"
+          description="Si te pasó una emergencia, cuéntale qué ocurrió. Si quieres ayudar, pregúntale dónde tiene más impacto tu aporte. El agente detecta el contexto y usa Gemini con las herramientas de diagnóstico y priorización de Modus."
+        />
+        <div className="mt-6">
+          <OrquestadorChat />
+        </div>
+      </section>
 
       {/* VISTA DAMNIFICADO */}
       <section id="lightweight" className="scroll-mt-24">
@@ -132,7 +178,10 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
           title="Modus para damnificados"
           description="Versión optimizada para conexiones débiles: reporta tu ubicación, tu núcleo familiar y tus necesidades en menos de 30 segundos."
           action={
-            <Button variant={victimView ? "default" : "outline"} onClick={() => setVictimView((v) => !v)}>
+            <Button
+              variant={victimView ? "default" : "outline"}
+              onClick={() => setVictimView((v) => !v)}
+            >
               <Smartphone className="mr-2 size-4" />
               {victimView ? "Ocultar vista damnificado" : "Abrir vista damnificado"}
             </Button>
@@ -174,7 +223,9 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
                       <span
                         className={cn(
                           "flex size-8 shrink-0 items-center justify-center rounded-lg font-display text-sm font-bold",
-                          d.rank <= 3 ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
+                          d.rank <= 3
+                            ? "bg-primary/15 text-primary"
+                            : "bg-muted text-muted-foreground",
                         )}
                       >
                         {d.rank}
@@ -198,8 +249,8 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
                   ))}
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Trophy className="size-3.5 text-primary" /> Proyectos verificados con evidencia de campo y validación
-                automática de avance.
+                <Trophy className="size-3.5 text-primary" /> Proyectos verificados con evidencia de
+                campo y validación automática de avance.
               </p>
             </TabsContent>
           ))}
@@ -258,7 +309,10 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
                 </span>
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-3 pt-8">
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-background/40">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${i.progress}%` }} />
+                    <div
+                      className="h-full rounded-full bg-primary"
+                      style={{ width: `${i.progress}%` }}
+                    />
                   </div>
                   <p className="mt-1.5 text-[11px] font-semibold text-background">
                     {i.progress}% validado por IA
@@ -277,7 +331,11 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
                     {i.population.toLocaleString("es-CO")} personas
                   </span>
                 </div>
-                <Button variant="outline" className="mt-4 w-full rounded-full" onClick={() => setDetail(i)}>
+                <Button
+                  variant="outline"
+                  className="mt-4 w-full rounded-full"
+                  onClick={() => setDetail(i)}
+                >
                   <HeartHandshake className="mr-2 size-4" /> Ver Reporte de Impacto
                 </Button>
               </div>
@@ -290,7 +348,6 @@ export function PublicPortal({ onReport, onRoleChange }: { onReport: () => void;
       </section>
 
       <InitiativeDetailDialog initiative={detail} onOpenChange={(o) => !o && setDetail(null)} />
-
     </div>
   );
 }

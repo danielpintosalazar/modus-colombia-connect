@@ -170,13 +170,27 @@ Continue developing this project in the [Lovable editor](https://lovable.dev/pro
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
 - **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
-## Development
+## Desarrollo Local e Integración con Backend
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+El frontend se conecta al backend FastAPI mediante `src/lib/modus-api.ts` y soporta tanto ejecución standalone con datos mock como conexión directa a la API en vivo.
+
+### 1. Variables de Entorno (`frontend/.env`)
+
+```ini
+# URL del backend FastAPI local
+VITE_API_URL=http://localhost:8000
+
+# false = consumir datos en vivo del backend; true = forzar mock local
+VITE_USE_MOCK=false
+```
+
+### 2. Instalación y Ejecución
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+cd frontend
+npm install
 npm run dev
 ```
+
+El servidor Vite levantará en <http://localhost:8080> (o el puerto que indique la consola). Al abrir el navegador, el portal consumirá las zonas en vivo desde `http://localhost:8000/zonas/publicas` (alimentadas por Firestore). Si el backend se apaga, la aplicación cae automáticamente en modo de contingencia local mostrando los datos mock sin interrumpir la experiencia.
+

@@ -1,0 +1,34 @@
+# --- Credenciales / secretos (NUNCA commitear) ---
+.env
+.env.*
+!.env.example
+firebase-key.json
+*-key.json
+*-credentials.json
+*.pem
+# Claves de cuenta de servicio de GCP descargadas (formato <proyecto>-<hash>.json)
+modus-*.json
+go-fest-*.json
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
+**/*service*account*.json
+
+# --- Python / backend ---
+Back/__pycache__/
+Back/**/__pycache__/
+Back/.venv/
+Back/venv/
+Back/*.egg-info/
+Back/.pytest_cache/
+__pycache__/
+*.pyc
+
+# --- Node / frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.output/
+frontend/.vite/
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/

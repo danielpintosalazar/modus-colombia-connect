@@ -1,0 +1,59 @@
+# Levanta backend (FastAPI) + frontend (Vite dev con SSR) para la demo local.
+#
+#   docker compose up --build
+#
+#   Frontend → http://localhost:8080
+#   Backend  → http://localhost:8000   (OpenAPI en /docs, health en /health)
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Back/Dockerfile
+    image: modus-backend
+    ports:
+      - "8000:8000"
+    # La configuración real vive en Back/.env (GOOGLE_CLOUD_PROJECT, credenciales,
+    # Vertex, etc.). Aquí solo se fija lo específico del contenedor.
+    environment:
+      ENVIRONMENT: docker
+      LOG_LEVEL: INFO
+      GOOGLE_APPLICATION_CREDENTIALS: /app/firebase-key.json
+    env_file:
+      - path: ./Back/.env
+        required: false
+    volumes:
+      - ./Back/app:/app/app:z
+      - ./Back/scripts:/app/scripts:z
+      - ./Back/firebase-key.json:/app/firebase-key.json:ro,z
+      - ./data:/data:ro,z
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+    image: modus-frontend
+    ports:
+      - "8080:8080"
+    # VITE_GOOGLE_MAPS_API_KEY y VITE_FIREBASE_* salen de frontend/.env (env_file).
+    # Aquí solo lo específico del contenedor.
+    environment:
+      # URL que usa el navegador en el host
+      VITE_API_URL: http://localhost:8000
+      # URL interna que usa el SSR dentro de la red Docker
+      API_URL_INTERNAL: http://backend:8000
+      VITE_USE_MOCK: "false"
+    env_file:
+      - path: ./frontend/.env
+        required: false
+    volumes:
+      - ./frontend/src:/app/src:z
+      - ./frontend/public:/app/public:z
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -4,11 +4,15 @@ import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { coverFor } from "@/lib/covers";
-import { emergencies } from "@/lib/modus-data";
+import { emergencies as staticEmergencies, type Emergency } from "@/lib/modus-data";
 import { donorsFor, initialsOf } from "@/lib/emergency-actors";
 import { ActorAvatars, SeverityBadge } from "./common";
 
-export function EmergencyCarousel() {
+export function EmergencyCarousel({
+  emergencies = staticEmergencies,
+}: {
+  emergencies?: Emergency[];
+}) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const total = emergencies.length;
@@ -25,7 +29,10 @@ export function EmergencyCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="flex transition-transform duration-700 ease-out" style={{ transform: `translateX(-${index * 100}%)` }}>
+      <div
+        className="flex transition-transform duration-700 ease-out"
+        style={{ transform: `translateX(-${index * 100}%)` }}
+      >
         {emergencies.map((e) => (
           <article key={e.id} className="w-full shrink-0 grow-0 basis-full">
             <div className="grid lg:grid-cols-2">
@@ -49,7 +56,9 @@ export function EmergencyCarousel() {
               <div className="flex flex-col gap-5 p-6 sm:p-9">
                 <div>
                   <p className="metric-label mb-2">{e.type}</p>
-                  <h3 className="font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">{e.name}</h3>
+                  <h3 className="font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+                    {e.name}
+                  </h3>
                   <p className="mt-3 text-sm text-muted-foreground">
                     {e.riskSource}. Actualizado {e.updated} · Responsable: {e.responsible}.
                   </p>
@@ -101,7 +110,9 @@ export function EmergencyCarousel() {
             onClick={() => setIndex(i)}
             className={cn(
               "h-1.5 rounded-full transition-all",
-              i === index ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/40 hover:bg-muted-foreground",
+              i === index
+                ? "w-6 bg-primary"
+                : "w-1.5 bg-muted-foreground/40 hover:bg-muted-foreground",
             )}
           />
         ))}
