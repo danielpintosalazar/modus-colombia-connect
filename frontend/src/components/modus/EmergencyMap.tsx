@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, Brain, Layers, MapPin, ShieldCheck, Users } from "lucide-react";
+import { AlertTriangle, Brain, Globe, Layers, MapPin, ShieldCheck, Users } from "lucide-react";
 import mapImg from "@/assets/map-colombia.jpg";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import {
   type Severity,
 } from "@/lib/modus-data";
 import { SectionHeading, SeverityBadge, severityDot } from "./common";
+import { GoogleEmergencyMap } from "./GoogleEmergencyMap";
 
 const severityFilters: { key: Severity; label: string }[] = [
   { key: "critical", label: "Crítica" },
@@ -31,6 +32,7 @@ export function EmergencyMap({ emergencies = staticEmergencies }: { emergencies?
   const [active, setActive] = useState<Severity[]>(["critical", "medium", "low"]);
   const [showTeams, setShowTeams] = useState(true);
   const [showZones, setShowZones] = useState(true);
+  const [useGoogleMaps, setUseGoogleMaps] = useState(true);
   const [selected, setSelected] = useState<Emergency | null>(null);
 
   const visible = useMemo(
@@ -44,100 +46,125 @@ export function EmergencyMap({ emergencies = staticEmergencies }: { emergencies?
   return (
     <section id="mapa" className="scroll-mt-24">
       <SectionHeading
-        eyebrow="Monitoreo en tiempo real"
+        eyebrow="Monitoreo geoespacial en tiempo real"
         title="Mapa interactivo de emergencias"
-        description="Emergencias activas, entidades desplegadas en campo y zonas de riesgo UNGRD / IDEAM sobre el territorio nacional."
+        description="Emergencias activas, entidades desplegadas en campo y zonas de riesgo UNGRD / IDEAM sobre el territorio nacional mediante Google Maps Platform."
       />
 
       <div className="grid gap-4 lg:grid-cols-4">
         <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-panel lg:col-span-3">
-          <img
-            src={mapImg}
-            alt="Mapa topográfico de Colombia con emergencias activas"
-            width={1536}
-            height={1024}
-            className="h-[440px] w-full object-cover opacity-90 sm:h-[560px]"
-          />
-
-          {showZones &&
-            riskZones.map((z) => (
-              <span
-                key={z.id}
-                title={`${z.label} · Fuente: ${z.source}`}
-                className="pointer-events-none absolute rounded-full border border-ai/40 bg-ai/10"
-                style={{
-                  left: `${z.x}%`,
-                  top: `${z.y}%`,
-                  width: `${z.size}%`,
-                  aspectRatio: "1",
-                  transform: "translate(-50%, -50%)",
-                }}
+          {useGoogleMaps ? (
+            <GoogleEmergencyMap
+              emergencies={visible}
+              showTeams={showTeams}
+              showZones={showZones}
+              onSelect={setSelected}
+              onFallbackRequest={() => setUseGoogleMaps(false)}
+            />
+          ) : (
+            <>
+              <img
+                src={mapImg}
+                alt="Mapa topográfico de Colombia con emergencias activas"
+                width={1536}
+                height={1024}
+                className="h-[440px] w-full object-cover opacity-90 sm:h-[560px]"
               />
-            ))}
 
-          {showTeams &&
-            fieldTeams.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                title={`${t.entity} — ${t.staff} efectivos`}
-                className="absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border border-primary/60 bg-primary/25 text-primary transition-transform hover:scale-110"
-                style={{ left: `${t.x}%`, top: `${t.y}%` }}
-              >
-                <ShieldCheck className="size-4" />
-              </button>
-            ))}
+              {showZones &&
+                riskZones.map((z) => (
+                  <span
+                    key={z.id}
+                    title={`${z.label} · Fuente: ${z.source}`}
+                    className="pointer-events-none absolute rounded-full border border-ai/40 bg-ai/10"
+                    style={{
+                      left: `${z.x}%`,
+                      top: `${z.y}%`,
+                      width: `${z.size}%`,
+                      aspectRatio: "1",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                ))}
 
-          {visible.map((e) => (
-            <button
-              key={e.id}
-              type="button"
-              onClick={() => setSelected(e)}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-              style={{ left: `${e.x}%`, top: `${e.y}%` }}
-              aria-label={`Ver detalle de ${e.name}`}
-            >
-              <span className="relative flex items-center justify-center">
-                <span
-                  className={cn(
-                    "absolute size-4 rounded-full animate-ping-slow",
-                    severityDot[e.severity],
-                  )}
-                />
-                <span
-                  className={cn(
-                    "relative flex size-8 items-center justify-center rounded-full border-2 border-background shadow-lg transition-transform hover:scale-115",
-                    severityDot[e.severity],
-                  )}
+              {showTeams &&
+                fieldTeams.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    title={`${t.entity} — ${t.staff} efectivos`}
+                    className="absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border border-primary/60 bg-primary/25 text-primary transition-transform hover:scale-110"
+                    style={{ left: `${t.x}%`, top: `${t.y}%` }}
+                  >
+                    <ShieldCheck className="size-4" />
+                  </button>
+                ))}
+
+              {visible.map((e) => (
+                <button
+                  key={e.id}
+                  type="button"
+                  onClick={() => setSelected(e)}
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${e.x}%`, top: `${e.y}%` }}
+                  aria-label={`Ver detalle de ${e.name}`}
                 >
-                  <MapPin className="size-4 text-background" />
-                </span>
-              </span>
-            </button>
-          ))}
+                  <span className="relative flex items-center justify-center">
+                    <span
+                      className={cn(
+                        "absolute size-4 rounded-full animate-ping-slow",
+                        severityDot[e.severity],
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "relative flex size-8 items-center justify-center rounded-full border-2 border-background shadow-lg transition-transform hover:scale-115",
+                        severityDot[e.severity],
+                      )}
+                    >
+                      <MapPin className="size-4 text-background" />
+                    </span>
+                  </span>
+                </button>
+              ))}
 
-          <div className="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-2 text-[11px]">
-            {severityFilters.map((s) => (
-              <span
-                key={s.key}
-                className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1"
-              >
-                <span className={cn("size-2 rounded-full", severityDot[s.key])} />
-                {s.label}
-              </span>
-            ))}
-            <span className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1 text-primary">
-              <ShieldCheck className="size-3" /> Entidad en campo
-            </span>
-          </div>
+              <div className="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-2 text-[11px]">
+                {severityFilters.map((s) => (
+                  <span
+                    key={s.key}
+                    className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1"
+                  >
+                    <span className={cn("size-2 rounded-full", severityDot[s.key])} />
+                    {s.label}
+                  </span>
+                ))}
+                <span className="glass flex items-center gap-1.5 rounded-full px-2.5 py-1 text-primary">
+                  <ShieldCheck className="size-3" /> Entidad en campo
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="space-y-4 lg:col-span-1">
           <div className="rounded-2xl border border-border bg-surface p-5">
-            <div className="mb-4 flex items-center gap-2">
-              <Layers className="size-4 text-primary" />
-              <h3 className="text-sm font-semibold">Capas y filtros</h3>
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Layers className="size-4 text-primary" />
+                <h3 className="text-sm font-semibold">Capas y filtros</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => setUseGoogleMaps((prev) => !prev)}
+                title="Alternar entre Google Maps y Mapa 2D"
+              >
+                <Globe className="size-3 text-primary" />
+                {useGoogleMaps ? "Google Maps" : "Modo 2D"}
+              </Button>
             </div>
+
             <div className="space-y-3">
               {severityFilters.map((s) => (
                 <button
