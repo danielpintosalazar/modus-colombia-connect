@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { getDataSource, getPublicEmergencies } from "@/lib/modus-api";
+import { useEffect, useState } from "react";
+import {
+  getDataSource,
+  getMetrics,
+  getPublicEmergencies,
+  getPublicInitiatives,
+} from "@/lib/modus-api";
+import { roleKeyForBackendRole, useAuth } from "@/lib/auth";
 import { ModusHeader, roles, type RoleKey } from "@/components/modus/RoleSwitcher";
 import { PublicPortal } from "@/components/modus/PublicPortal";
 import { PrivateDonorView } from "@/components/modus/PrivateDonorView";
@@ -14,8 +20,12 @@ const description =
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const emergencies = await getPublicEmergencies();
-    return { emergencies, dataSource: getDataSource() };
+    const [emergencies, initiatives, metrics] = await Promise.all([
+      getPublicEmergencies(),
+      getPublicInitiatives(),
+      getMetrics(),
+    ]);
+    return { emergencies, initiatives, metrics, dataSource: getDataSource() };
   },
   head: () => ({
     meta: [
@@ -31,9 +41,18 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { emergencies, dataSource } = Route.useLoaderData();
+  const { emergencies, initiatives, metrics, dataSource } = Route.useLoaderData();
+  const auth = useAuth();
   const [role, setRole] = useState<RoleKey>("publico");
   const [reportOpen, setReportOpen] = useState(false);
+
+  // Al iniciar sesión con Firebase, la vista sigue al rol del custom claim.
+  // El usuario aún puede cambiar de pestaña; las llamadas al backend usan el token real igual.
+  useEffect(() => {
+    if (auth.status === "signed-in" && auth.role) {
+      setRole(roleKeyForBackendRole(auth.role));
+    }
+  }, [auth.status, auth.role]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,6 +63,8 @@ function Index() {
           {role === "publico" ? (
             <PublicPortal
               emergencies={emergencies}
+              initiatives={initiatives}
+              metrics={metrics}
               onReport={() => setReportOpen(true)}
               onRoleChange={setRole}
             />

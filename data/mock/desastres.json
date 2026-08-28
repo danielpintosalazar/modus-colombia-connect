@@ -1,0 +1,41 @@
+[
+  {
+    "id": "des-demo-mocoa-sismo",
+    "titulo": "Sismo de magnitud 5.2 sacude el sur de Colombia con epicentro en Putumayo",
+    "descripcion": "El Servicio Geológico Colombiano reportó un movimiento telúrico sentido en Mocoa y municipios cercanos; equipos de respuesta evalúan viviendas afectadas.",
+    "url": "https://www.example-news.co/sismo-putumayo-mocoa",
+    "fuente": "example-news.co",
+    "imagen": null,
+    "lugar": "Putumayo",
+    "tipo": "sismo",
+    "consulta": "(sismo OR terremoto OR inundación OR deslizamiento OR avalancha OR incendio OR vendaval OR emergencia) Colombia damnificados",
+    "publicado": "2026-08-19T22:10:00Z",
+    "buscado_en": "2026-08-20T09:00:00Z"
+  },
+  {
+    "id": "des-demo-choco-inundacion",
+    "titulo": "Fuertes lluvias dejan más de 1.200 familias damnificadas por inundaciones en Chocó",
+    "descripcion": "El desbordamiento de varios ríos afectó corregimientos ribereños; la UNGRD activó ayuda humanitaria y albergues temporales.",
+    "url": "https://www.example-news.co/inundaciones-choco-damnificados",
+    "fuente": "example-news.co",
+    "imagen": null,
+    "lugar": "Chocó",
+    "tipo": "inundacion",
+    "consulta": "(sismo OR terremoto OR inundación OR deslizamiento OR avalancha OR incendio OR vendaval OR emergencia) Colombia damnificados",
+    "publicado": "2026-08-18T14:00:00Z",
+    "buscado_en": "2026-08-20T09:00:00Z"
+  },
+  {
+    "id": "des-demo-santander-deslizamiento",
+    "titulo": "Deslizamiento de tierra bloquea vía y deja viviendas en riesgo en Santander",
+    "descripcion": "La remoción en masa sobre la vía nacional obligó a evacuar 40 familias; bomberos y Defensa Civil atienden la emergencia.",
+    "url": "https://www.example-news.co/deslizamiento-santander-via",
+    "fuente": "example-news.co",
+    "imagen": null,
+    "lugar": "Santander",
+    "tipo": "deslizamiento",
+    "consulta": "(sismo OR terremoto OR inundación OR deslizamiento OR avalancha OR incendio OR vendaval OR emergencia) Colombia damnificados",
+    "publicado": "2026-08-17T08:30:00Z",
+    "buscado_en": "2026-08-20T09:00:00Z"
+  }
+]

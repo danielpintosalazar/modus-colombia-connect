@@ -18,8 +18,7 @@ _RESPUESTA_POR_ROL: dict[str, str] = {
     "damnificado": "Puedes reportar tu necesidad principal y ubicación desde la app; las entidades de respuesta la verán priorizada según la urgencia de tu zona.",
     "donante": "Puedes ver el déficit por sector y zona en el panel de métricas para decidir dónde tu donación tiene más impacto.",
     "empresa_beneficiaria": "Revisa tus donaciones asignadas y su estado de entrega en tu panel.",
-    "entidad_respuesta": "Consulta las órdenes de despliegue activas y el estado de diagnóstico de cada zona en tu panel.",
-    "estado": "Consulta el panel de métricas agregadas para ver cobertura y déficit por sector a nivel nacional.",
+    "estado_entidad_respuesta": "Consulta el panel consolidado: métricas de cobertura y déficit por sector a nivel nacional, órdenes de despliegue activas y estado de diagnóstico de cada zona.",
 }
 
 

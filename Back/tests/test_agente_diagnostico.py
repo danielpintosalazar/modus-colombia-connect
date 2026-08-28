@@ -1,15 +1,15 @@
-"""Sin GOOGLE_CLOUD_PROJECT configurado en el entorno de test, el agente debe
-caer automáticamente al fallback por reglas (nunca lanzar una excepción)."""
+"""El agente de diagnóstico nunca lanza: usa Gemini si hay credenciales o cae al
+fallback por reglas. Siempre devuelve una clasificación válida y su trazabilidad."""
 
 from app.agents.diagnostico.agent import diagnosticar
 from app.models.agentes import DiagnosticoInput
 
 
-def test_diagnostico_cae_a_fallback_sin_credenciales():
+def test_diagnostico_devuelve_clasificacion_valida():
     salida = diagnosticar(DiagnosticoInput(imagen_url="https://example.com/zona_destruida.jpg", zona_id="z1"))
-    assert salida.clasificacion == "destruida"
+    assert salida.clasificacion in ("destruida", "parcial", "segura")
     assert salida.zona_id == "z1"
-    assert "modo=fallback_reglas" in salida.datos_usados
+    assert any("modo=" in d for d in salida.datos_usados)
 
 
 def test_diagnostico_incluye_datos_usados():

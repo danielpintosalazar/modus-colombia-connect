@@ -46,7 +46,7 @@ def reportar_damnificado(
 @router.get("/", response_model=list[Damnificado])
 def listar(
     zona_id: str | None = None,
-    _: Usuario = Depends(require_role("entidad_respuesta", "estado")),
+    _: Usuario = Depends(require_role("estado_entidad_respuesta")),
 ) -> list[Damnificado]:
     try:
         return listar_damnificados(zona_id)

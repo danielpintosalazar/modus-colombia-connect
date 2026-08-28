@@ -78,11 +78,12 @@ Sigue estos pasos en tu navegador para validar que cada capa del sistema funcion
 3. **Prueba del Agente Orquestador (`POST /chat`):**
    - En Swagger, expande **`POST /chat`**, haz clic en *Try it out*.
    - **Autenticación en local:** Puedes ejecutar la petición **directamente sin configurar ningún token** (el entorno local asigna automáticamente un usuario de prueba `damnificado`).
-   - Si deseas simular un rol específico (como `estado` o `entidad_respuesta`), haz clic en el botón verde **"Authorize"** en la parte superior derecha de Swagger e introduce:
+   - Si deseas simular un rol específico, haz clic en el botón verde **"Authorize"** en la parte superior derecha de Swagger e introduce:
      ```text
-     dev-token:estado
+     dev-token:estado_entidad_respuesta
      ```
-     *(o `dev-token:entidad_respuesta`, `dev-token:donante`, `dev-token:damnificado`)*.
+     *(o `dev-token:donante`, `dev-token:damnificado`, `dev-token:empresa_beneficiaria`)*.
+     > Decisión D1: `estado` y `entidad_respuesta` se fusionaron en el rol `estado_entidad_respuesta`. Los tokens antiguos `dev-token:estado` y `dev-token:entidad_respuesta` siguen funcionando como alias del rol combinado.
    - Envía el siguiente cuerpo de prueba:
    ```json
    {
@@ -139,6 +140,36 @@ Esta prueba demuestra ante el jurado que el sistema **nunca se rompe ni muestra 
    - El footer muestra el estado *"datos de demostración (sin backend)"*.
    - El mapa y los catálogos continúan funcionando fluidamente con los datos de contingencia de `modus-data.ts`.
 4. Vuelve a iniciar el backend (`python -m uvicorn app.main:app --reload --port 8000`) y recarga la página: el frontend retoma automáticamente la conexión en vivo.
+
+---
+
+---
+
+### Paso 4: Sistema de Identificación de desastres (`GET /desastres`)
+
+Busca emergencias recientes en Colombia en fuentes abiertas (Google Programmable
+Search), las guarda en Firestore con la **hora de la búsqueda** y aplica una
+**caché de 12 h**.
+
+```bash
+# 1ª llamada: si no hay nada buscado hace < 12 h, llama a Google y persiste.
+curl -s -H "Authorization: Bearer dev-token:estado_entidad_respuesta" \
+  "http://localhost:8000/desastres/" | jq '{fuente, total, buscado_en}'
+#   -> {"fuente": "busqueda", "total": N, "buscado_en": "2026-08-28T..."}
+
+# 2ª llamada inmediata: NO vuelve a buscar (ya hay un desastre reciente).
+curl -s -H "Authorization: Bearer dev-token:estado_entidad_respuesta" \
+  "http://localhost:8000/desastres/" | jq '{fuente, total}'
+#   -> {"fuente": "cache", ...}
+
+# Forzar una búsqueda nueva ignorando la caché:
+curl -s -H "Authorization: Bearer dev-token:estado_entidad_respuesta" \
+  "http://localhost:8000/desastres/?forzar=true&q=inundaciones%20Choc%C3%B3" | jq '.fuente'
+```
+
+- Sin `GOOGLE_SEARCH_API_KEY`/`GOOGLE_CSE_ID` o sin Firestore, el endpoint responde
+  `"fuente": "demo"` con `data/mock/desastres.json` (Regla 2, nunca 5xx).
+- La ventana se configura con `BUSQUEDA_DESASTRES_VENTANA_HORAS` (por defecto 12).
 
 ---
 

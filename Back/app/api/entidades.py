@@ -1,5 +1,5 @@
-"""Endpoints para empresa_beneficiaria y entidad_respuesta: donaciones asignadas
-y las dos tools de agentes expuestas como HTTP para uso manual/pruebas
+"""Endpoints para empresa_beneficiaria y estado_entidad_respuesta: donaciones
+asignadas y las dos tools de agentes expuestas como HTTP para uso manual/pruebas
 (el Agente Orquestador las invoca como funciones internas, no vía este router)."""
 
 import logging
@@ -31,7 +31,7 @@ def donaciones_asignadas(usuario: Usuario = Depends(require_role("empresa_benefi
 @router.post("/agentes/diagnostico", response_model=DiagnosticoOutput)
 def agente_diagnostico(
     entrada: DiagnosticoInput,
-    _: Usuario = Depends(require_role("entidad_respuesta", "estado")),
+    _: Usuario = Depends(require_role("estado_entidad_respuesta")),
 ) -> DiagnosticoOutput:
     return diagnosticar(entrada)
 
@@ -39,6 +39,6 @@ def agente_diagnostico(
 @router.post("/agentes/priorizacion", response_model=PriorizacionOutput)
 def agente_priorizacion(
     entrada: PriorizacionInput,
-    _: Usuario = Depends(require_role("entidad_respuesta", "estado")),
+    _: Usuario = Depends(require_role("estado_entidad_respuesta")),
 ) -> PriorizacionOutput:
     return priorizar(entrada)

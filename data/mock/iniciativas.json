@@ -1,0 +1,67 @@
+[
+  {
+    "id": "ini-mocoa-reconstruccion",
+    "titulo": "Reconstrucción urbana barrio San Miguel",
+    "descripcion": "Reconstrucción de 420 viviendas con estándar sismo-resistente, obras de mitigación en quebradas y recuperación de vías terciarias tras el deslizamiento.",
+    "zona_id": "zona-mocoa",
+    "sector": "vivienda",
+    "entidad_responsable_id": "usr-estado-entidad-1",
+    "actores": ["UNGRD", "Cementos del Pacífico", "Defensa Civil"],
+    "poblacion_impactada": 12840,
+    "meta": "420 viviendas entregadas y 3 comunas con vías habilitadas",
+    "progreso": 0.68,
+    "estado": "en_ejecucion"
+  },
+  {
+    "id": "ini-cundinamarca-reforestacion",
+    "titulo": "Reforestación y control de incendios Cerros Orientales",
+    "descripcion": "Siembra de 96.000 árboles nativos, brigadas comunitarias contra incendios y monitoreo satelital de cobertura vegetal.",
+    "zona_id": "zona-cundinamarca",
+    "sector": "salud",
+    "entidad_responsable_id": "usr-estado-entidad-1",
+    "actores": ["CAR Cundinamarca", "Grupo Energía Andina", "Bomberos Bogotá"],
+    "poblacion_impactada": 4310,
+    "meta": "96.000 árboles sembrados y 7 veredas con brigada activa",
+    "progreso": 0.41,
+    "estado": "en_ejecucion"
+  },
+  {
+    "id": "ini-choco-alimentos",
+    "titulo": "Kits de alimentos y servicios esenciales río Atrato",
+    "descripcion": "Entrega de 18.000 kits alimentarios y potabilización comunitaria mediante transporte fluvial, con trazabilidad de última milla.",
+    "zona_id": "zona-choco",
+    "sector": "alimentos",
+    "entidad_responsable_id": "usr-estado-entidad-1",
+    "actores": ["Cruz Roja Colombiana", "Postobón", "Gobernación del Chocó"],
+    "poblacion_impactada": 21560,
+    "meta": "18.000 kits entregados en 14 corregimientos",
+    "progreso": 0.84,
+    "estado": "en_ejecucion"
+  },
+  {
+    "id": "ini-guajira-agua",
+    "titulo": "Pozos comunitarios y nutrición infantil La Guajira",
+    "descripcion": "Perforación de pozos, distribución de agua potable y complementación nutricional en comunidades wayúu con seguimiento antropométrico.",
+    "zona_id": "zona-guajira",
+    "sector": "agua",
+    "entidad_responsable_id": "usr-estado-entidad-1",
+    "actores": ["UNGRD", "ICBF", "Gobernación de La Guajira"],
+    "poblacion_impactada": 8900,
+    "meta": "12 pozos activos y 2.400 menores en seguimiento nutricional",
+    "progreso": 0.35,
+    "estado": "en_ejecucion"
+  },
+  {
+    "id": "ini-santander-evaluacion",
+    "titulo": "Evaluación estructural y apoyo psicosocial Los Santos",
+    "descripcion": "Inspección post-sísmica de 260 viviendas con clasificación de habitabilidad, refuerzo de mampostería y atención psicosocial en albergues.",
+    "zona_id": "zona-santander",
+    "sector": "vivienda",
+    "entidad_responsable_id": "usr-estado-entidad-1",
+    "actores": ["Defensa Civil Santander", "Ministerio de Salud"],
+    "poblacion_impactada": 3120,
+    "meta": "260 viviendas evaluadas y 800 personas con atención psicosocial",
+    "progreso": 1.0,
+    "estado": "concluida"
+  }
+]

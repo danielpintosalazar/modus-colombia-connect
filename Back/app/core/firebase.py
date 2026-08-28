@@ -47,20 +47,38 @@ def init_firebase() -> firebase_admin.App | None:
             if (base_backend / key_path).exists():
                 key_path = base_backend / key_path
 
-        if key_path.exists():
+        if key_path.is_file():
             cred = credentials.Certificate(str(key_path))
             logger.info("Usando credencial de servicio: %s", key_path)
         else:
-            cred = credentials.ApplicationDefault()
-            logger.info("Usando ApplicationDefault credentials")
+            # No hay archivo de servicio (p. ej. el bind mount de Docker creó un
+            # directorio vacío). Solo seguimos si hay ADC real disponible; si no,
+            # se degrada limpio y sin traceback: los endpoints usan su fallback.
+            try:
+                import google.auth
 
-        _app = firebase_admin.initialize_app(
-            cred,
-            {
-                "projectId": settings.google_cloud_project,
-                "storageBucket": settings.firebase_storage_bucket or None,
-            },
-        )
+                google.auth.default()
+                cred = credentials.ApplicationDefault()
+                logger.info("Usando ApplicationDefault credentials")
+            except Exception:
+                logger.warning(
+                    "Sin credencial de servicio válida en %s ni ApplicationDefault; "
+                    "Firebase queda deshabilitado y los endpoints usan su fallback.",
+                    key_path,
+                )
+                return None
+
+        try:
+            _app = firebase_admin.initialize_app(
+                cred,
+                {
+                    "projectId": settings.google_cloud_project,
+                    "storageBucket": settings.firebase_storage_bucket or None,
+                },
+            )
+        except ValueError:
+            # Ya inicializado (reload de uvicorn / doble import): reutilizar el app existente.
+            _app = firebase_admin.get_app()
         logger.info("Firebase Admin SDK inicializado para el proyecto %s", settings.google_cloud_project)
     except Exception:
         logger.exception("No se pudo inicializar Firebase Admin SDK")

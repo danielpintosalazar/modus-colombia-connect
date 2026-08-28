@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { coverFor } from "@/lib/covers";
+import type { Metrics } from "@/lib/modus-api";
 import {
   donors,
   emergencies as staticEmergencies,
-  initiatives,
+  initiatives as staticInitiatives,
   regions,
   type Emergency,
   type Initiative,
@@ -24,6 +25,7 @@ import { ActorAvatars, AiProgress, KpiCard, SectionHeading } from "./common";
 import { ActorCards } from "./ActorCards";
 import { EmergencyCarousel } from "./EmergencyCarousel";
 import { EmergencyMap } from "./EmergencyMap";
+import { OrquestadorChat } from "./OrquestadorChat";
 import { InitiativeDetailDialog } from "./InitiativeDetailDialog";
 import { VictimLightView } from "./VictimLightView";
 import type { RoleKey } from "./RoleSwitcher";
@@ -32,10 +34,14 @@ export function PublicPortal({
   onReport,
   onRoleChange,
   emergencies = staticEmergencies,
+  initiatives = staticInitiatives,
+  metrics = null,
 }: {
   onReport: () => void;
   onRoleChange: (r: RoleKey) => void;
   emergencies?: Emergency[];
+  initiatives?: Initiative[];
+  metrics?: Metrics | null;
 }) {
   const [region, setRegion] = useState<string>("todas");
   const [query, setQuery] = useState("");
@@ -48,7 +54,8 @@ export function PublicPortal({
       (region === "todas" || i.region === region) &&
       (q === "" || i.title.toLowerCase().includes(q) || i.region.toLowerCase().includes(q)),
   );
-  const totalAffected = emergencies.reduce((a, e) => a + e.affected, 0);
+  const totalAffected =
+    metrics?.poblacionAfectadaTotal ?? emergencies.reduce((a, e) => a + e.affected, 0);
 
   return (
     <div className="space-y-20 pb-20">
@@ -115,7 +122,7 @@ export function PublicPortal({
           <KpiCard
             label="Iniciativas activas"
             value={String(initiatives.filter((i) => i.status === "En Proceso").length)}
-            hint="Con validación por IA"
+            hint={metrics ? `${metrics.zonasCriticas} zonas críticas` : "Con validación por IA"}
             trend="+3"
             data={[2, 3, 3, 4, 4, 5, 6]}
           />
@@ -149,6 +156,18 @@ export function PublicPortal({
         </p>
         <div className="mt-8">
           <EmergencyCarousel emergencies={emergencies} />
+        </div>
+      </section>
+
+      {/* AGENTE ORQUESTADOR */}
+      <section id="asistente" className="scroll-mt-24">
+        <SectionHeading
+          eyebrow="Asistente con IA"
+          title="Habla con el Agente Orquestador"
+          description="Si te pasó una emergencia, cuéntale qué ocurrió. Si quieres ayudar, pregúntale dónde tiene más impacto tu aporte. El agente detecta el contexto y usa Gemini con las herramientas de diagnóstico y priorización de Modus."
+        />
+        <div className="mt-6">
+          <OrquestadorChat />
         </div>
       </section>
 

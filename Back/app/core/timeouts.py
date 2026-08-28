@@ -22,10 +22,15 @@ class LlamadaExternaTimeoutError(RuntimeError):
 
 def run_with_timeout(fn: Callable[[], T], *, nombre: str) -> T:
     timeout = get_settings().external_call_timeout_seconds
-    with ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(fn)
-        try:
-            return future.result(timeout=timeout)
-        except FutureTimeoutError as exc:
-            logger.error("Llamada externa '%s' superó el timeout de %ss", nombre, timeout)
-            raise LlamadaExternaTimeoutError(f"'{nombre}' superó el timeout de {timeout}s") from exc
+    # Sin `with`: al agotar el timeout NO se espera a que el hilo termine (un
+    # `with ThreadPoolExecutor` bloquea en su salida hasta que la tarea acaba,
+    # anulando el propio timeout). El hilo huérfano termina solo en segundo plano.
+    executor = ThreadPoolExecutor(max_workers=1)
+    future = executor.submit(fn)
+    try:
+        return future.result(timeout=timeout)
+    except FutureTimeoutError as exc:
+        logger.error("Llamada externa '%s' superó el timeout de %ss", nombre, timeout)
+        raise LlamadaExternaTimeoutError(f"'{nombre}' superó el timeout de {timeout}s") from exc
+    finally:
+        executor.shutdown(wait=False, cancel_futures=True)

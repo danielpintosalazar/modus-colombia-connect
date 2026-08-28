@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ca-mocoa-coliseo",
+    "nombre": "Coliseo Municipal Mocoa",
+    "ciudad": "Mocoa, Putumayo",
+    "entidades": ["Defensa Civil", "Ejército Nacional"],
+    "capacidad": "1.200 m³",
+    "vigencia": "12 ago — 30 sep 2026",
+    "zona_id": "zona-mocoa"
+  },
+  {
+    "id": "ca-quibdo-aeropuerto",
+    "nombre": "Bodega Aeropuerto El Caraño",
+    "ciudad": "Quibdó, Chocó",
+    "entidades": ["Cruz Roja", "Armada Nacional"],
+    "capacidad": "2.800 m³",
+    "vigencia": "05 ago — 15 oct 2026",
+    "zona_id": "zona-choco"
+  },
+  {
+    "id": "ca-bogota-corferias",
+    "nombre": "Centro de Acopio Corferias",
+    "ciudad": "Bogotá D.C.",
+    "entidades": ["Bomberos Bogotá", "UNGRD"],
+    "capacidad": "4.500 m³",
+    "vigencia": "01 jul — 31 dic 2026",
+    "zona_id": "zona-cundinamarca"
+  }
+]

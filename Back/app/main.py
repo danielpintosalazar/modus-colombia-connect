@@ -4,7 +4,23 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import chat, damnificados, donantes, entidades, estado, metricas, zonas
+from app.api import (
+    auth,
+    avances,
+    centros_acopio,
+    chat,
+    damnificados,
+    desastres,
+    donantes,
+    entidades,
+    estado,
+    evidencias,
+    iniciativas,
+    metricas,
+    necesidades,
+    reportes,
+    zonas,
+)
 from app.core.config import get_settings
 from app.core.firebase import FirebaseNotConfiguredError
 
@@ -47,10 +63,18 @@ def health() -> dict:
     return {"status": "ok", "environment": settings.environment}
 
 
+app.include_router(auth.router)
 app.include_router(zonas.router)
 app.include_router(damnificados.router)
 app.include_router(donantes.router)
 app.include_router(entidades.router)
 app.include_router(estado.router)
+app.include_router(iniciativas.router)
+app.include_router(necesidades.router)
+app.include_router(avances.router)
+app.include_router(centros_acopio.router)
+app.include_router(evidencias.router)
+app.include_router(desastres.router)
+app.include_router(reportes.router)
 app.include_router(metricas.router)
 app.include_router(chat.router)
