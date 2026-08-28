@@ -39,7 +39,21 @@ def init_firebase() -> firebase_admin.App | None:
         return None
 
     try:
-        cred = credentials.ApplicationDefault()
+        from pathlib import Path
+        key_path = Path(settings.google_application_credentials)
+        if not key_path.is_absolute():
+            # Buscar relativo a la raíz del backend o workspace
+            base_backend = Path(__file__).resolve().parents[2]
+            if (base_backend / key_path).exists():
+                key_path = base_backend / key_path
+
+        if key_path.exists():
+            cred = credentials.Certificate(str(key_path))
+            logger.info("Usando credencial de servicio: %s", key_path)
+        else:
+            cred = credentials.ApplicationDefault()
+            logger.info("Usando ApplicationDefault credentials")
+
         _app = firebase_admin.initialize_app(
             cred,
             {

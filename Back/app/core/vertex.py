@@ -29,7 +29,18 @@ def ensure_vertex_init() -> None:
     if not settings.has_google_credentials:
         raise VertexNotConfiguredError("GOOGLE_CLOUD_PROJECT no configurado — Vertex AI no disponible.")
 
+    import os
+    from pathlib import Path
     import vertexai
+
+    key_path = Path(settings.google_application_credentials)
+    if not key_path.is_absolute():
+        base_backend = Path(__file__).resolve().parents[2]
+        if (base_backend / key_path).exists():
+            key_path = base_backend / key_path
+
+    if key_path.exists() and "GOOGLE_APPLICATION_CREDENTIALS" not in os.environ:
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(key_path)
 
     vertexai.init(project=settings.google_cloud_project, location=settings.vertex_ai_region)
     _initialized = True
