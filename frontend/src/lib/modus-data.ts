@@ -8,7 +8,9 @@ export type Emergency = {
   type: string;
   severity: Severity;
   affected: number;
-  x: number; // % position on map
+  lat: number;
+  lng: number;
+  x: number; // % position on fallback map
   y: number;
   riskSource: string;
   aiNeeds: string[];
@@ -27,6 +29,8 @@ export const emergencies: Emergency[] = [
     type: "Deslizamiento / Reconstrucción urbana",
     severity: "critical",
     affected: 12840,
+    lat: 1.1519,
+    lng: -76.6464,
     x: 40,
     y: 74,
     riskSource: "UNGRD — Alerta roja hidrológica + análisis CNN de imágenes satelitales Sentinel-2",
@@ -44,6 +48,8 @@ export const emergencies: Emergency[] = [
     type: "Incendio forestal / Reforestación",
     severity: "medium",
     affected: 4310,
+    lat: 4.65,
+    lng: -74.05,
     x: 46,
     y: 52,
     riskSource: "IDEAM — Índice de sequía severa + detección térmica dron autónomo",
@@ -61,6 +67,8 @@ export const emergencies: Emergency[] = [
     type: "Inundación / Kits de alimentos",
     severity: "critical",
     affected: 21560,
+    lat: 5.6919,
+    lng: -76.6583,
     x: 30,
     y: 46,
     riskSource: "IDEAM — Nivel río Atrato en cota máxima histórica (sensores telemétricos)",
@@ -78,6 +86,8 @@ export const emergencies: Emergency[] = [
     type: "Sequía / Activación económica",
     severity: "low",
     affected: 8900,
+    lat: 11.3548,
+    lng: -72.5205,
     x: 55,
     y: 15,
     riskSource: "IDEAM — Fenómeno de El Niño, balance hídrico negativo 6 meses",
@@ -95,6 +105,8 @@ export const emergencies: Emergency[] = [
     type: "Terremoto / Evaluación estructural",
     severity: "medium",
     affected: 3120,
+    lat: 6.7331,
+    lng: -73.1198,
     x: 47,
     y: 33,
     riskSource: "SGC — Red Sismológica Nacional, epicentro Los Santos",
@@ -106,21 +118,21 @@ export const emergencies: Emergency[] = [
   },
 ];
 
-export type FieldTeam = { id: string; entity: string; region: string; x: number; y: number; staff: number };
+export type FieldTeam = { id: string; entity: string; region: string; lat: number; lng: number; x: number; y: number; staff: number };
 
 export const fieldTeams: FieldTeam[] = [
-  { id: "FT-1", entity: "Defensa Civil Colombiana", region: "Mocoa", x: 43, y: 70, staff: 84 },
-  { id: "FT-2", entity: "Cruz Roja Colombiana", region: "Quibdó", x: 27, y: 42, staff: 61 },
-  { id: "FT-3", entity: "Bomberos Bogotá", region: "Cundinamarca", x: 50, y: 55, staff: 47 },
-  { id: "FT-4", entity: "Ejército Nacional", region: "Santander", x: 51, y: 30, staff: 130 },
+  { id: "FT-1", entity: "Defensa Civil Colombiana", region: "Mocoa", lat: 1.15, lng: -76.65, x: 43, y: 70, staff: 84 },
+  { id: "FT-2", entity: "Cruz Roja Colombiana", region: "Quibdó", lat: 5.69, lng: -76.66, x: 27, y: 42, staff: 61 },
+  { id: "FT-3", entity: "Bomberos Bogotá", region: "Cundinamarca", lat: 4.61, lng: -74.08, x: 50, y: 55, staff: 47 },
+  { id: "FT-4", entity: "Ejército Nacional", region: "Santander", lat: 7.12, lng: -73.12, x: 51, y: 30, staff: 130 },
 ];
 
-export type RiskZone = { id: string; label: string; source: string; x: number; y: number; size: number };
+export type RiskZone = { id: string; label: string; source: string; lat: number; lng: number; radiusKm: number; x: number; y: number; size: number };
 
 export const riskZones: RiskZone[] = [
-  { id: "RZ-1", label: "Zona de influencia — remoción en masa", source: "UNGRD", x: 40, y: 74, size: 20 },
-  { id: "RZ-2", label: "Zona de riesgo — inundación lenta", source: "IDEAM", x: 30, y: 46, size: 26 },
-  { id: "RZ-3", label: "Zona de riesgo — incendio de cobertura", source: "IDEAM", x: 46, y: 52, size: 16 },
+  { id: "RZ-1", label: "Zona de influencia — remoción en masa", source: "UNGRD", lat: 1.1519, lng: -76.6464, radiusKm: 8, x: 40, y: 74, size: 20 },
+  { id: "RZ-2", label: "Zona de riesgo — inundación lenta", source: "IDEAM", lat: 5.6919, lng: -76.6583, radiusKm: 15, x: 30, y: 46, size: 26 },
+  { id: "RZ-3", label: "Zona de riesgo — incendio de cobertura", source: "IDEAM", lat: 4.65, lng: -74.05, radiusKm: 10, x: 46, y: 52, size: 16 },
 ];
 
 export type Donor = {

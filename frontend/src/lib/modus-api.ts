@@ -62,18 +62,22 @@ function matchFallback(zone: PublicZone): Emergency | undefined {
 
 function toEmergency(zone: PublicZone): Emergency {
   const fallback = matchFallback(zone);
-  const coords = zone.ubicacion
-    ? projectToMap(zone.ubicacion.lat, zone.ubicacion.lng)
-    : { x: fallback?.x ?? 50, y: fallback?.y ?? 50 };
+  const coords = fallback
+    ? { x: fallback.x, y: fallback.y }
+    : zone.ubicacion
+      ? projectToMap(zone.ubicacion.lat, zone.ubicacion.lng)
+      : { x: 50, y: 50 };
 
   if (fallback) {
     // Conserva textos ricos del mock (equipos, fuente de riesgo, cover por región)
-    // y sobreescribe solo lo que el backend sí conoce.
+    // y sobreescribe con los datos en vivo de Firestore (afectados, severidad, necesidades, lat/lng).
     return {
       ...fallback,
       severity: severityMap[zone.severidad],
       affected: zone.poblacion_afectada,
       aiNeeds: zone.sector_necesidad.length ? zone.sector_necesidad : fallback.aiNeeds,
+      lat: zone.ubicacion?.lat ?? fallback.lat,
+      lng: zone.ubicacion?.lng ?? fallback.lng,
       x: coords.x,
       y: coords.y,
       nationalPriority: zone.severidad === "critica",
@@ -89,6 +93,8 @@ function toEmergency(zone: PublicZone): Emergency {
     type: "Emergencia humanitaria",
     severity: severityMap[zone.severidad],
     affected: zone.poblacion_afectada,
+    lat: zone.ubicacion?.lat ?? 4.5709,
+    lng: zone.ubicacion?.lng ?? -74.2973,
     x: coords.x,
     y: coords.y,
     riskSource: "Modus — datos operativos",
