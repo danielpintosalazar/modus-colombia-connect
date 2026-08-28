@@ -7,7 +7,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-Rol = Literal["damnificado", "donante", "empresa_beneficiaria", "entidad_respuesta", "estado"]
+# D1: Estado + Entidad de Respuesta fusionados en un rol para P0 (ver docs/contratos_agentes.md § Cambios).
+Rol = Literal["damnificado", "donante", "empresa_beneficiaria", "estado_entidad_respuesta"]
 
 
 # --- Agente Diagnóstico ---

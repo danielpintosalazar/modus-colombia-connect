@@ -13,17 +13,12 @@ services:
     image: modus-backend
     ports:
       - "8000:8000"
+    # La configuración real vive en Back/.env (GOOGLE_CLOUD_PROJECT, credenciales,
+    # Vertex, etc.). Aquí solo se fija lo específico del contenedor.
     environment:
       ENVIRONMENT: docker
       LOG_LEVEL: INFO
-      GOOGLE_CLOUD_PROJECT: go-fest-506814
       GOOGLE_APPLICATION_CREDENTIALS: /app/firebase-key.json
-      FIREBASE_STORAGE_BUCKET: go-fest-506814-storage
-      VERTEX_AI_REGION: us-central1
-      VERTEX_AI_GEMINI_MODEL: gemini-2.0-flash
-      BIGQUERY_DATASET: metricas_desastre
-      AGENTS_FORCE_FALLBACK: "false"
-      EXTERNAL_CALL_TIMEOUT_SECONDS: "8"
     env_file:
       - path: ./Back/.env
         required: false
@@ -45,13 +40,14 @@ services:
     image: modus-frontend
     ports:
       - "8080:8080"
+    # VITE_GOOGLE_MAPS_API_KEY y VITE_FIREBASE_* salen de frontend/.env (env_file).
+    # Aquí solo lo específico del contenedor.
     environment:
       # URL que usa el navegador en el host
       VITE_API_URL: http://localhost:8000
       # URL interna que usa el SSR dentro de la red Docker
       API_URL_INTERNAL: http://backend:8000
       VITE_USE_MOCK: "false"
-      VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-AIzaSyBDqvy6Wujh9xaxxkNEa7EYjyBqU6F1pk8}
     env_file:
       - path: ./frontend/.env
         required: false

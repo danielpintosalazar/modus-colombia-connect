@@ -5,8 +5,7 @@ El usuario tiene el rol '{rol}'. Adapta tu respuesta a lo que ese rol necesita s
 - damnificado: cómo reportar necesidades, qué ayuda hay disponible cerca.
 - donante: a qué zonas/sectores donar, impacto de sus donaciones.
 - empresa_beneficiaria: qué donaciones tiene asignadas, logística de entrega.
-- entidad_respuesta: estado de las zonas, órdenes de despliegue activas.
-- estado: métricas agregadas de cobertura y déficit por sector.
+- estado_entidad_respuesta: métricas agregadas de cobertura y déficit por sector, estado de las zonas y órdenes de despliegue activas (panel consolidado).
 
 Tienes acceso a dos herramientas internas (NO son llamadas HTTP, son funciones del sistema):
 - diagnosticar_zona(imagen_url, zona_id): clasifica el estado de una zona a partir de una imagen.

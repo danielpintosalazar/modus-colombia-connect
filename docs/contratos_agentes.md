@@ -43,7 +43,7 @@
 **Input**
 ```json
 {
-  "rol": "damnificado|donante|empresa_beneficiaria|entidad_respuesta|estado",
+  "rol": "damnificado|donante|empresa_beneficiaria|estado_entidad_respuesta",
   "mensaje": "string",
   "contexto_usuario": {}
 }
@@ -64,4 +64,4 @@ Todo output de agente debe incluir de qué datos concretos partió (`datos_usado
 
 ## Cambios
 
-_(ninguno todavía)_
+- **2026-08-28 — Decisión D1 (`rectificar verificar.md`).** El enum `rol` del Agente Orquestador pasa de `damnificado|donante|empresa_beneficiaria|entidad_respuesta|estado` a `damnificado|donante|empresa_beneficiaria|estado_entidad_respuesta`. Motivo: para P0 el Estado y la Entidad de Respuesta se fusionan en un único rol con permisos combinados (ahorra un rol de auth y una vista en 24h). El resto del contrato (Input/Output de los 3 agentes, campos, `datos_usados`) no cambia. Separarlos vuelve a `entidad_respuesta` + `estado` como P1 si sobra tiempo.

@@ -69,3 +69,9 @@ El frontend conserva su estructura y lógica visual. El backend sigue el contrat
 - El portal (`index.tsx` → `PublicPortal` → `EmergencyMap`, `EmergencyCarousel`) ahora recibe `emergencies` desde el `loader` de la ruta, que llama a `getPublicEmergencies()`. Offline devuelve el mock y la UI se ve igual; con backend, todo el portal (mapa, carrusel, KPI de afectados) se enciende con una sola bandera. Los componentes conservan un valor por defecto al import estático, así que no rompen tests ni otros usos.
 - Config: `frontend/.env.example` (versionado) y `frontend/.env.local` (local, `*.local` está en `.gitignore`) con `VITE_USE_MOCK=true` para desarrollo sin backend.
 - Docker (`docker compose up --build`): el frontend corre en modo `vite dev` (SSR) porque el build de producción del template apunta a Cloudflare Workers. El SSR habla con `http://backend:8000` (`API_URL_INTERNAL`) y el navegador con `http://localhost:8000` (`VITE_API_URL`); `modus-api.ts` elige según `import.meta.env.SSR`. Verificado extremo a extremo: la home renderiza en servidor con datos del backend ("datos en vivo" en el footer).
+
+### Endpoint disponible: `GET /desastres` (Sistema de Identificación)
+
+- Devuelve emergencias recientes en Colombia detectadas en fuentes abiertas, con caché de 12 h en el backend (ver `docs/decisiones_tecnicas.md`, entrada del 2026-08-28). Requiere rol `estado_entidad_respuesta`.
+- Forma de la respuesta: `{ fuente: "cache"|"busqueda"|"demo", buscado_en: string|null, total: number, desastres: Desastre[] }`, con `Desastre = { id, titulo, descripcion, url, fuente, imagen, lugar, tipo, consulta, publicado, buscado_en }`.
+- **Aún sin consumidor en el frontend.** Encaja en `ResponseEntityView` (feed de eventos que alimenta el catálogo de necesidades). Falta `getDesastres()` en `src/lib/modus-api.ts` con su fallback a mock, como el resto de la capa de datos.

@@ -1,16 +1,58 @@
 import { useState } from "react";
-import { Building2, Check, HeartHandshake, Landmark, Siren, UserRound, Users } from "lucide-react";
+import {
+  Building2,
+  Check,
+  HeartHandshake,
+  Landmark,
+  LogIn,
+  LogOut,
+  Siren,
+  UserRound,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
+import { LoginDialog } from "./LoginDialog";
 
 export type RoleKey = "publico" | "privado" | "gobierno" | "entidad";
 
-export const roles: { key: RoleKey; label: string; short: string; icon: typeof Users; desc: string }[] = [
-  { key: "publico", label: "Portal Público / Damnificado", short: "Público", icon: Users, desc: "Reporta, consulta y solicita ayuda" },
-  { key: "privado", label: "Donante Sector Privado (RSE)", short: "Privado", icon: Building2, desc: "Invierte y mide impacto RSE" },
-  { key: "gobierno", label: "Donante Sector Público / Gobierno", short: "Gobierno", icon: Landmark, desc: "Prioriza y despacha recursos" },
-  { key: "entidad", label: "Entidad de Respuesta / Operativa", short: "Respuesta", icon: HeartHandshake, desc: "Opera en terreno y reporta avance" },
+export const roles: {
+  key: RoleKey;
+  label: string;
+  short: string;
+  icon: typeof Users;
+  desc: string;
+}[] = [
+  {
+    key: "publico",
+    label: "Portal Público / Damnificado",
+    short: "Público",
+    icon: Users,
+    desc: "Reporta, consulta y solicita ayuda",
+  },
+  {
+    key: "privado",
+    label: "Donante Sector Privado (RSE)",
+    short: "Privado",
+    icon: Building2,
+    desc: "Invierte y mide impacto RSE",
+  },
+  {
+    key: "gobierno",
+    label: "Donante Sector Público / Gobierno",
+    short: "Gobierno",
+    icon: Landmark,
+    desc: "Prioriza y despacha recursos",
+  },
+  {
+    key: "entidad",
+    label: "Entidad de Respuesta / Operativa",
+    short: "Respuesta",
+    icon: HeartHandshake,
+    desc: "Opera en terreno y reporta avance",
+  },
 ];
 
 export function ModusHeader({
@@ -23,6 +65,8 @@ export function ModusHeader({
   onReport: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const auth = useAuth();
   const current = roles.find((r) => r.key === role) ?? roles[0]!;
 
   return (
@@ -62,8 +106,39 @@ export function ModusHeader({
               </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-80 p-2">
+              {auth.enabled ? (
+                <div className="mb-2 rounded-xl border border-border bg-surface/60 p-3">
+                  {auth.status === "signed-in" ? (
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="metric-label">Sesión</p>
+                        <p className="truncate text-sm font-semibold">{auth.email}</p>
+                        {auth.role ? (
+                          <p className="text-xs text-muted-foreground">Rol: {auth.role}</p>
+                        ) : null}
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => void auth.signOutUser()}>
+                        <LogOut className="mr-1.5 size-3.5" /> Salir
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        setOpen(false);
+                        setLoginOpen(true);
+                      }}
+                    >
+                      <LogIn className="mr-1.5 size-3.5" /> Iniciar sesión (Firebase)
+                    </Button>
+                  )}
+                </div>
+              ) : null}
+
               <div className="px-2 pb-2 pt-1">
-                <p className="metric-label">Rol activo</p>
+                <p className="metric-label">Vista activa</p>
                 <p className="text-sm font-semibold">{current.label}</p>
               </div>
               <div className="space-y-1">
@@ -83,12 +158,19 @@ export function ModusHeader({
                         activeRole ? "bg-primary/10 text-foreground" : "hover:bg-surface-strong",
                       )}
                     >
-                      <Icon className={cn("mt-0.5 size-4 shrink-0", activeRole ? "text-primary" : "text-muted-foreground")} />
+                      <Icon
+                        className={cn(
+                          "mt-0.5 size-4 shrink-0",
+                          activeRole ? "text-primary" : "text-muted-foreground",
+                        )}
+                      />
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-semibold">{r.label}</span>
                         <span className="block text-xs text-muted-foreground">{r.desc}</span>
                       </span>
-                      {activeRole ? <Check className="mt-0.5 size-4 shrink-0 text-primary" /> : null}
+                      {activeRole ? (
+                        <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                      ) : null}
                     </button>
                   );
                 })}
@@ -97,6 +179,8 @@ export function ModusHeader({
           </Popover>
         </div>
       </div>
+
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
     </header>
   );
 }

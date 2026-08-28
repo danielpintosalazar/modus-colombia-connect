@@ -118,21 +118,106 @@ export const emergencies: Emergency[] = [
   },
 ];
 
-export type FieldTeam = { id: string; entity: string; region: string; lat: number; lng: number; x: number; y: number; staff: number };
+export type FieldTeam = {
+  id: string;
+  entity: string;
+  region: string;
+  lat: number;
+  lng: number;
+  x: number;
+  y: number;
+  staff: number;
+};
 
 export const fieldTeams: FieldTeam[] = [
-  { id: "FT-1", entity: "Defensa Civil Colombiana", region: "Mocoa", lat: 1.15, lng: -76.65, x: 43, y: 70, staff: 84 },
-  { id: "FT-2", entity: "Cruz Roja Colombiana", region: "Quibdó", lat: 5.69, lng: -76.66, x: 27, y: 42, staff: 61 },
-  { id: "FT-3", entity: "Bomberos Bogotá", region: "Cundinamarca", lat: 4.61, lng: -74.08, x: 50, y: 55, staff: 47 },
-  { id: "FT-4", entity: "Ejército Nacional", region: "Santander", lat: 7.12, lng: -73.12, x: 51, y: 30, staff: 130 },
+  {
+    id: "FT-1",
+    entity: "Defensa Civil Colombiana",
+    region: "Mocoa",
+    lat: 1.15,
+    lng: -76.65,
+    x: 43,
+    y: 70,
+    staff: 84,
+  },
+  {
+    id: "FT-2",
+    entity: "Cruz Roja Colombiana",
+    region: "Quibdó",
+    lat: 5.69,
+    lng: -76.66,
+    x: 27,
+    y: 42,
+    staff: 61,
+  },
+  {
+    id: "FT-3",
+    entity: "Bomberos Bogotá",
+    region: "Cundinamarca",
+    lat: 4.61,
+    lng: -74.08,
+    x: 50,
+    y: 55,
+    staff: 47,
+  },
+  {
+    id: "FT-4",
+    entity: "Ejército Nacional",
+    region: "Santander",
+    lat: 7.12,
+    lng: -73.12,
+    x: 51,
+    y: 30,
+    staff: 130,
+  },
 ];
 
-export type RiskZone = { id: string; label: string; source: string; lat: number; lng: number; radiusKm: number; x: number; y: number; size: number };
+export type RiskZone = {
+  id: string;
+  label: string;
+  source: string;
+  lat: number;
+  lng: number;
+  radiusKm: number;
+  x: number;
+  y: number;
+  size: number;
+};
 
 export const riskZones: RiskZone[] = [
-  { id: "RZ-1", label: "Zona de influencia — remoción en masa", source: "UNGRD", lat: 1.1519, lng: -76.6464, radiusKm: 8, x: 40, y: 74, size: 20 },
-  { id: "RZ-2", label: "Zona de riesgo — inundación lenta", source: "IDEAM", lat: 5.6919, lng: -76.6583, radiusKm: 15, x: 30, y: 46, size: 26 },
-  { id: "RZ-3", label: "Zona de riesgo — incendio de cobertura", source: "IDEAM", lat: 4.65, lng: -74.05, radiusKm: 10, x: 46, y: 52, size: 16 },
+  {
+    id: "RZ-1",
+    label: "Zona de influencia — remoción en masa",
+    source: "UNGRD",
+    lat: 1.1519,
+    lng: -76.6464,
+    radiusKm: 8,
+    x: 40,
+    y: 74,
+    size: 20,
+  },
+  {
+    id: "RZ-2",
+    label: "Zona de riesgo — inundación lenta",
+    source: "IDEAM",
+    lat: 5.6919,
+    lng: -76.6583,
+    radiusKm: 15,
+    x: 30,
+    y: 46,
+    size: 26,
+  },
+  {
+    id: "RZ-3",
+    label: "Zona de riesgo — incendio de cobertura",
+    source: "IDEAM",
+    lat: 4.65,
+    lng: -74.05,
+    radiusKm: 10,
+    x: 46,
+    y: 52,
+    size: 16,
+  },
 ];
 
 export type Donor = {
@@ -146,26 +231,186 @@ export type Donor = {
 };
 
 export const donors: Donor[] = [
-  { rank: 1, name: "Grupo Energía Andina", initials: "GEA", amount: "$4.820M COP", projects: 14, sector: "privado", focus: "Resiliencia territorial" },
-  { rank: 2, name: "Bancolombia Fundación", initials: "BF", amount: "$3.940M COP", projects: 11, sector: "privado", focus: "Recuperación de ingresos" },
-  { rank: 3, name: "Cementos del Pacífico", initials: "CP", amount: "$3.110M COP", projects: 9, sector: "privado", focus: "Reconstrucción urbana" },
-  { rank: 4, name: "Postobón S.A.", initials: "PO", amount: "$2.480M COP", projects: 12, sector: "privado", focus: "Agua y alimentos" },
-  { rank: 5, name: "Ecopetrol", initials: "EC", amount: "$2.240M COP", projects: 8, sector: "privado", focus: "Servicios esenciales" },
-  { rank: 6, name: "Sura Seguros", initials: "SS", amount: "$1.870M COP", projects: 7, sector: "privado", focus: "Salud" },
-  { rank: 7, name: "Alpina", initials: "AL", amount: "$1.410M COP", projects: 6, sector: "privado", focus: "Nutrición" },
-  { rank: 8, name: "Corona", initials: "CO", amount: "$1.180M COP", projects: 5, sector: "privado", focus: "Vivienda" },
-  { rank: 9, name: "Nutresa", initials: "NU", amount: "$980M COP", projects: 5, sector: "privado", focus: "Kits alimentarios" },
-  { rank: 10, name: "Claro Colombia", initials: "CL", amount: "$760M COP", projects: 4, sector: "privado", focus: "Conectividad" },
-  { rank: 1, name: "UNGRD", initials: "UN", amount: "$18.400M COP", projects: 32, sector: "publico", focus: "Coordinación nacional" },
-  { rank: 2, name: "Gobernación de Antioquia", initials: "GA", amount: "$7.250M COP", projects: 18, sector: "publico", focus: "Reconstrucción" },
-  { rank: 3, name: "Alcaldía de Bogotá", initials: "AB", amount: "$6.930M COP", projects: 21, sector: "publico", focus: "Incendios y salud" },
-  { rank: 4, name: "Gobernación del Chocó", initials: "GC", amount: "$4.510M COP", projects: 13, sector: "publico", focus: "Inundaciones" },
-  { rank: 5, name: "Ministerio de Salud", initials: "MS", amount: "$4.120M COP", projects: 15, sector: "publico", focus: "Brigadas médicas" },
-  { rank: 6, name: "Gobernación de Putumayo", initials: "GP", amount: "$3.640M COP", projects: 10, sector: "publico", focus: "Mocoa" },
-  { rank: 7, name: "ICBF", initials: "IC", amount: "$2.980M COP", projects: 12, sector: "publico", focus: "Nutrición infantil" },
-  { rank: 8, name: "Ejército Nacional", initials: "EN", amount: "$2.410M COP", projects: 9, sector: "publico", focus: "Logística" },
-  { rank: 9, name: "CAR Cundinamarca", initials: "CA", amount: "$1.760M COP", projects: 8, sector: "publico", focus: "Reforestación" },
-  { rank: 10, name: "Gobernación de La Guajira", initials: "GG", amount: "$1.240M COP", projects: 6, sector: "publico", focus: "Agua" },
+  {
+    rank: 1,
+    name: "Grupo Energía Andina",
+    initials: "GEA",
+    amount: "$4.820M COP",
+    projects: 14,
+    sector: "privado",
+    focus: "Resiliencia territorial",
+  },
+  {
+    rank: 2,
+    name: "Bancolombia Fundación",
+    initials: "BF",
+    amount: "$3.940M COP",
+    projects: 11,
+    sector: "privado",
+    focus: "Recuperación de ingresos",
+  },
+  {
+    rank: 3,
+    name: "Cementos del Pacífico",
+    initials: "CP",
+    amount: "$3.110M COP",
+    projects: 9,
+    sector: "privado",
+    focus: "Reconstrucción urbana",
+  },
+  {
+    rank: 4,
+    name: "Postobón S.A.",
+    initials: "PO",
+    amount: "$2.480M COP",
+    projects: 12,
+    sector: "privado",
+    focus: "Agua y alimentos",
+  },
+  {
+    rank: 5,
+    name: "Ecopetrol",
+    initials: "EC",
+    amount: "$2.240M COP",
+    projects: 8,
+    sector: "privado",
+    focus: "Servicios esenciales",
+  },
+  {
+    rank: 6,
+    name: "Sura Seguros",
+    initials: "SS",
+    amount: "$1.870M COP",
+    projects: 7,
+    sector: "privado",
+    focus: "Salud",
+  },
+  {
+    rank: 7,
+    name: "Alpina",
+    initials: "AL",
+    amount: "$1.410M COP",
+    projects: 6,
+    sector: "privado",
+    focus: "Nutrición",
+  },
+  {
+    rank: 8,
+    name: "Corona",
+    initials: "CO",
+    amount: "$1.180M COP",
+    projects: 5,
+    sector: "privado",
+    focus: "Vivienda",
+  },
+  {
+    rank: 9,
+    name: "Nutresa",
+    initials: "NU",
+    amount: "$980M COP",
+    projects: 5,
+    sector: "privado",
+    focus: "Kits alimentarios",
+  },
+  {
+    rank: 10,
+    name: "Claro Colombia",
+    initials: "CL",
+    amount: "$760M COP",
+    projects: 4,
+    sector: "privado",
+    focus: "Conectividad",
+  },
+  {
+    rank: 1,
+    name: "UNGRD",
+    initials: "UN",
+    amount: "$18.400M COP",
+    projects: 32,
+    sector: "publico",
+    focus: "Coordinación nacional",
+  },
+  {
+    rank: 2,
+    name: "Gobernación de Antioquia",
+    initials: "GA",
+    amount: "$7.250M COP",
+    projects: 18,
+    sector: "publico",
+    focus: "Reconstrucción",
+  },
+  {
+    rank: 3,
+    name: "Alcaldía de Bogotá",
+    initials: "AB",
+    amount: "$6.930M COP",
+    projects: 21,
+    sector: "publico",
+    focus: "Incendios y salud",
+  },
+  {
+    rank: 4,
+    name: "Gobernación del Chocó",
+    initials: "GC",
+    amount: "$4.510M COP",
+    projects: 13,
+    sector: "publico",
+    focus: "Inundaciones",
+  },
+  {
+    rank: 5,
+    name: "Ministerio de Salud",
+    initials: "MS",
+    amount: "$4.120M COP",
+    projects: 15,
+    sector: "publico",
+    focus: "Brigadas médicas",
+  },
+  {
+    rank: 6,
+    name: "Gobernación de Putumayo",
+    initials: "GP",
+    amount: "$3.640M COP",
+    projects: 10,
+    sector: "publico",
+    focus: "Mocoa",
+  },
+  {
+    rank: 7,
+    name: "ICBF",
+    initials: "IC",
+    amount: "$2.980M COP",
+    projects: 12,
+    sector: "publico",
+    focus: "Nutrición infantil",
+  },
+  {
+    rank: 8,
+    name: "Ejército Nacional",
+    initials: "EN",
+    amount: "$2.410M COP",
+    projects: 9,
+    sector: "publico",
+    focus: "Logística",
+  },
+  {
+    rank: 9,
+    name: "CAR Cundinamarca",
+    initials: "CA",
+    amount: "$1.760M COP",
+    projects: 8,
+    sector: "publico",
+    focus: "Reforestación",
+  },
+  {
+    rank: 10,
+    name: "Gobernación de La Guajira",
+    initials: "GG",
+    amount: "$1.240M COP",
+    projects: 6,
+    sector: "publico",
+    focus: "Agua",
+  },
 ];
 
 export type Initiative = {
@@ -286,7 +531,7 @@ export const initiatives: Initiative[] = [
     entity: "Claro Colombia + Alcaldía de Bogotá",
     area: "Zona de influencia baja — 4 albergues",
     population: 1600,
-    investmentType: "Acceso a Oportunidades",
+    investmentType: "Redes de apoyo social",
     budget: "$820M COP",
     actors: ["CL", "AB"],
     description:
@@ -298,7 +543,7 @@ export const initiatives: Initiative[] = [
 ];
 
 export const investmentTypes = [
-  "Acceso a Oportunidades",
+  "Redes de apoyo social",
   "Servicios Esenciales",
   "Recuperación de Ingresos",
   "Resiliencia Territorial",
@@ -316,14 +561,70 @@ export type StateEntity = {
 };
 
 export const stateEntities: StateEntity[] = [
-  { id: "SE-1", name: "UNGRD", kind: "Coordinación nacional", available: 240, status: "Desplegada", region: "Nacional" },
-  { id: "SE-2", name: "Defensa Civil Colombiana", kind: "Búsqueda y rescate", available: 180, status: "Desplegada", region: "Putumayo" },
-  { id: "SE-3", name: "Ejército Nacional", kind: "Logística y seguridad", available: 620, status: "En alistamiento", region: "Santander" },
-  { id: "SE-4", name: "Bomberos de Colombia", kind: "Incendios y rescate", available: 310, status: "Disponible", region: "Cundinamarca" },
-  { id: "SE-5", name: "Cruz Roja Colombiana", kind: "Salud y ayuda humanitaria", available: 275, status: "Desplegada", region: "Chocó" },
-  { id: "SE-6", name: "Armada Nacional", kind: "Transporte fluvial", available: 140, status: "Disponible", region: "Chocó" },
-  { id: "SE-7", name: "ICBF", kind: "Protección y nutrición", available: 96, status: "Disponible", region: "La Guajira" },
-  { id: "SE-8", name: "IDEAM", kind: "Monitoreo hidrometeorológico", available: 40, status: "Disponible", region: "Nacional" },
+  {
+    id: "SE-1",
+    name: "UNGRD",
+    kind: "Coordinación nacional",
+    available: 240,
+    status: "Desplegada",
+    region: "Nacional",
+  },
+  {
+    id: "SE-2",
+    name: "Defensa Civil Colombiana",
+    kind: "Búsqueda y rescate",
+    available: 180,
+    status: "Desplegada",
+    region: "Putumayo",
+  },
+  {
+    id: "SE-3",
+    name: "Ejército Nacional",
+    kind: "Logística y seguridad",
+    available: 620,
+    status: "En alistamiento",
+    region: "Santander",
+  },
+  {
+    id: "SE-4",
+    name: "Bomberos de Colombia",
+    kind: "Incendios y rescate",
+    available: 310,
+    status: "Disponible",
+    region: "Cundinamarca",
+  },
+  {
+    id: "SE-5",
+    name: "Cruz Roja Colombiana",
+    kind: "Salud y ayuda humanitaria",
+    available: 275,
+    status: "Desplegada",
+    region: "Chocó",
+  },
+  {
+    id: "SE-6",
+    name: "Armada Nacional",
+    kind: "Transporte fluvial",
+    available: 140,
+    status: "Disponible",
+    region: "Chocó",
+  },
+  {
+    id: "SE-7",
+    name: "ICBF",
+    kind: "Protección y nutrición",
+    available: 96,
+    status: "Disponible",
+    region: "La Guajira",
+  },
+  {
+    id: "SE-8",
+    name: "IDEAM",
+    kind: "Monitoreo hidrometeorológico",
+    available: 40,
+    status: "Disponible",
+    region: "Nacional",
+  },
 ];
 
 export type CollectionCenter = {
@@ -336,9 +637,30 @@ export type CollectionCenter = {
 };
 
 export const collectionCenters: CollectionCenter[] = [
-  { id: "CA-1", name: "Coliseo Municipal Mocoa", city: "Mocoa, Putumayo", entities: ["Defensa Civil", "Ejército Nacional"], capacity: "1.200 m³", validity: "12 ago — 30 sep 2026" },
-  { id: "CA-2", name: "Bodega Aeropuerto El Caraño", city: "Quibdó, Chocó", entities: ["Cruz Roja", "Armada Nacional"], capacity: "2.800 m³", validity: "05 ago — 15 oct 2026" },
-  { id: "CA-3", name: "Centro de Acopio Corferias", city: "Bogotá D.C.", entities: ["Bomberos Bogotá", "UNGRD"], capacity: "4.500 m³", validity: "01 jul — 31 dic 2026" },
+  {
+    id: "CA-1",
+    name: "Coliseo Municipal Mocoa",
+    city: "Mocoa, Putumayo",
+    entities: ["Defensa Civil", "Ejército Nacional"],
+    capacity: "1.200 m³",
+    validity: "12 ago — 30 sep 2026",
+  },
+  {
+    id: "CA-2",
+    name: "Bodega Aeropuerto El Caraño",
+    city: "Quibdó, Chocó",
+    entities: ["Cruz Roja", "Armada Nacional"],
+    capacity: "2.800 m³",
+    validity: "05 ago — 15 oct 2026",
+  },
+  {
+    id: "CA-3",
+    name: "Centro de Acopio Corferias",
+    city: "Bogotá D.C.",
+    entities: ["Bomberos Bogotá", "UNGRD"],
+    capacity: "4.500 m³",
+    validity: "01 jul — 31 dic 2026",
+  },
 ];
 
 export const mobilizedResources = [
@@ -364,12 +686,83 @@ export type Need = {
 };
 
 export const needs: Need[] = [
-  { id: "ND-101", title: "18.000 kits alimentarios — corregimientos ribereños", domain: "Alimentos", region: "Chocó", people: 21560, urgency: 94, severity: "critical", accessibility: "Solo acceso fluvial", linkedEntities: 4, detail: "Población aislada por creciente del Atrato; se requiere despacho escalonado en lanchas de 3 t." },
-  { id: "ND-102", title: "Albergue temporal para 420 familias", domain: "Vivienda", region: "Mocoa", people: 1680, urgency: 91, severity: "critical", accessibility: "Vía terciaria parcialmente habilitada", linkedEntities: 3, detail: "Carpas familiares, módulos sanitarios y energía temporal en zona segura fuera de la ronda hídrica." },
-  { id: "ND-103", title: "Potabilización comunitaria 40.000 L/día", domain: "Agua", region: "Chocó", people: 9400, urgency: 88, severity: "critical", accessibility: "Acceso mixto", linkedEntities: 2, detail: "Plantas móviles y pastillas potabilizadoras; contaminación por sedimentos y aguas residuales." },
-  { id: "ND-104", title: "Brigadas médicas y salud respiratoria", domain: "Salud", region: "Cundinamarca", people: 4310, urgency: 72, severity: "medium", accessibility: "Buen acceso vehicular", linkedEntities: 2, detail: "Afectación respiratoria por humo; se requieren nebulizadores, N95 y atención prioritaria a menores." },
-  { id: "ND-105", title: "Evaluación estructural de 260 viviendas", domain: "Vivienda", region: "Santander", people: 3120, urgency: 66, severity: "medium", accessibility: "Buen acceso vehicular", linkedEntities: 1, detail: "Inspección post-sísmica con clasificación de habitabilidad y refuerzo de mampostería." },
-  { id: "ND-106", title: "Nutrición infantil y complementación", domain: "Alimentos", region: "La Guajira", people: 8900, urgency: 58, severity: "low", accessibility: "Trocha, requiere 4x4", linkedEntities: 2, detail: "Complementación nutricional en comunidades wayúu con seguimiento antropométrico mensual." },
+  {
+    id: "ND-101",
+    title: "18.000 kits alimentarios — corregimientos ribereños",
+    domain: "Alimentos",
+    region: "Chocó",
+    people: 21560,
+    urgency: 94,
+    severity: "critical",
+    accessibility: "Solo acceso fluvial",
+    linkedEntities: 4,
+    detail:
+      "Población aislada por creciente del Atrato; se requiere despacho escalonado en lanchas de 3 t.",
+  },
+  {
+    id: "ND-102",
+    title: "Albergue temporal para 420 familias",
+    domain: "Vivienda",
+    region: "Mocoa",
+    people: 1680,
+    urgency: 91,
+    severity: "critical",
+    accessibility: "Vía terciaria parcialmente habilitada",
+    linkedEntities: 3,
+    detail:
+      "Carpas familiares, módulos sanitarios y energía temporal en zona segura fuera de la ronda hídrica.",
+  },
+  {
+    id: "ND-103",
+    title: "Potabilización comunitaria 40.000 L/día",
+    domain: "Agua",
+    region: "Chocó",
+    people: 9400,
+    urgency: 88,
+    severity: "critical",
+    accessibility: "Acceso mixto",
+    linkedEntities: 2,
+    detail:
+      "Plantas móviles y pastillas potabilizadoras; contaminación por sedimentos y aguas residuales.",
+  },
+  {
+    id: "ND-104",
+    title: "Brigadas médicas y salud respiratoria",
+    domain: "Salud",
+    region: "Cundinamarca",
+    people: 4310,
+    urgency: 72,
+    severity: "medium",
+    accessibility: "Buen acceso vehicular",
+    linkedEntities: 2,
+    detail:
+      "Afectación respiratoria por humo; se requieren nebulizadores, N95 y atención prioritaria a menores.",
+  },
+  {
+    id: "ND-105",
+    title: "Evaluación estructural de 260 viviendas",
+    domain: "Vivienda",
+    region: "Santander",
+    people: 3120,
+    urgency: 66,
+    severity: "medium",
+    accessibility: "Buen acceso vehicular",
+    linkedEntities: 1,
+    detail: "Inspección post-sísmica con clasificación de habitabilidad y refuerzo de mampostería.",
+  },
+  {
+    id: "ND-106",
+    title: "Nutrición infantil y complementación",
+    domain: "Alimentos",
+    region: "La Guajira",
+    people: 8900,
+    urgency: 58,
+    severity: "low",
+    accessibility: "Trocha, requiere 4x4",
+    linkedEntities: 2,
+    detail:
+      "Complementación nutricional en comunidades wayúu con seguimiento antropométrico mensual.",
+  },
 ];
 
 export type RiskAlert = {
@@ -383,11 +776,54 @@ export type RiskAlert = {
 };
 
 export const riskAlerts: RiskAlert[] = [
-  { id: "AL-1", source: "IDEAM", title: "Nivel río Atrato +2,4 m en 6 h", detail: "Umbral de alerta roja superado en estación Quibdó. Proyección de desborde en 9 h para 6 corregimientos.", severity: "critical", time: "hace 4 min", confidence: 96 },
-  { id: "AL-2", source: "Satélite / CNN", title: "Nueva cicatriz de deslizamiento 3,2 ha", detail: "Modelo CNN detecta remoción en masa activa en ladera nororiental de Mocoa sobre imagen Sentinel-2 del 27/08.", severity: "critical", time: "hace 12 min", confidence: 91 },
-  { id: "AL-3", source: "Dron", title: "Foco térmico reactivado — Cerro Guadalupe", detail: "Vuelo autónomo detecta 3 focos con temperatura > 340 °C y viento sostenido de 18 km/h.", severity: "medium", time: "hace 27 min", confidence: 88 },
-  { id: "AL-4", source: "UNGRD", title: "Declaratoria de calamidad pública — Mocoa", detail: "Consejo municipal de gestión del riesgo activa protocolo de respuesta nivel 3.", severity: "medium", time: "hace 1 h", confidence: 100 },
-  { id: "AL-5", source: "SGC", title: "Réplica sísmica 3,4 Mw — Los Santos", detail: "Profundidad 148 km, sin reporte de daños adicionales. Monitoreo continuo activo.", severity: "low", time: "hace 2 h", confidence: 99 },
+  {
+    id: "AL-1",
+    source: "IDEAM",
+    title: "Nivel río Atrato +2,4 m en 6 h",
+    detail:
+      "Umbral de alerta roja superado en estación Quibdó. Proyección de desborde en 9 h para 6 corregimientos.",
+    severity: "critical",
+    time: "hace 4 min",
+    confidence: 96,
+  },
+  {
+    id: "AL-2",
+    source: "Satélite / CNN",
+    title: "Nueva cicatriz de deslizamiento 3,2 ha",
+    detail:
+      "Modelo CNN detecta remoción en masa activa en ladera nororiental de Mocoa sobre imagen Sentinel-2 del 27/08.",
+    severity: "critical",
+    time: "hace 12 min",
+    confidence: 91,
+  },
+  {
+    id: "AL-3",
+    source: "Dron",
+    title: "Foco térmico reactivado — Cerro Guadalupe",
+    detail:
+      "Vuelo autónomo detecta 3 focos con temperatura > 340 °C y viento sostenido de 18 km/h.",
+    severity: "medium",
+    time: "hace 27 min",
+    confidence: 88,
+  },
+  {
+    id: "AL-4",
+    source: "UNGRD",
+    title: "Declaratoria de calamidad pública — Mocoa",
+    detail: "Consejo municipal de gestión del riesgo activa protocolo de respuesta nivel 3.",
+    severity: "medium",
+    time: "hace 1 h",
+    confidence: 100,
+  },
+  {
+    id: "AL-5",
+    source: "SGC",
+    title: "Réplica sísmica 3,4 Mw — Los Santos",
+    detail: "Profundidad 148 km, sin reporte de daños adicionales. Monitoreo continuo activo.",
+    severity: "low",
+    time: "hace 2 h",
+    confidence: 99,
+  },
 ];
 
 export const severityLabel: Record<Severity, string> = {

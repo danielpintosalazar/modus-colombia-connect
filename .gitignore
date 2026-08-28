@@ -6,6 +6,11 @@ firebase-key.json
 *-key.json
 *-credentials.json
 *.pem
+# Claves de cuenta de servicio de GCP descargadas (formato <proyecto>-<hash>.json)
+modus-*.json
+go-fest-*.json
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
+**/*service*account*.json
 
 # --- Python / backend ---
 Back/__pycache__/

@@ -7,6 +7,7 @@ está disponible o la llamada falla, cae al enrutador por reglas de router.py.
 
 import json
 import logging
+import re
 
 from app.agents.diagnostico.agent import diagnosticar
 from app.agents.orquestador.prompts import build_orquestador_prompt
@@ -91,6 +92,35 @@ def _build_gemini_tool():
     ])
 
 
+_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
+
+
+def _extraer_json_dict(texto: str) -> dict:
+    """Gemini a veces envuelve el JSON en fences markdown o añade prosa. Se extrae
+    el primer objeto JSON válido; si no hay ninguno, se lanza para caer al fallback."""
+    texto = (texto or "").strip()
+    if not texto:
+        raise ValueError("respuesta vacía de Gemini")
+    for candidato in (texto, *(_FENCE_RE.findall(texto))):
+        candidato = candidato.strip()
+        try:
+            return json.loads(candidato)
+        except json.JSONDecodeError:
+            pass
+    inicio = texto.find("{")
+    fin = texto.rfind("}")
+    if inicio != -1 and fin > inicio:
+        return json.loads(texto[inicio : fin + 1])
+    raise ValueError("no se encontró JSON en la respuesta de Gemini")
+
+
+def _texto_seguro(response) -> str:
+    try:
+        return response.text or ""
+    except Exception:  # noqa: BLE001 — .text lanza si la última parte no es texto
+        return ""
+
+
 def _orquestar_con_gemini(entrada: OrquestadorInput) -> OrquestadorOutput:
     settings = get_settings()
     if settings.agents_force_fallback:
@@ -120,7 +150,7 @@ def _orquestar_con_gemini(entrada: OrquestadorInput) -> OrquestadorOutput:
             Part.from_function_response(name=nombre, response={"content": resultado})
         )
 
-    data = json.loads(response.text)
+    data = _extraer_json_dict(_texto_seguro(response))
     salida = OrquestadorOutput(**data)
     salida.datos_usados = [*salida.datos_usados, *datos_usados]
     return salida

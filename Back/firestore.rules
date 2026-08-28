@@ -22,7 +22,7 @@ service cloud.firestore {
 
     // usuarios/{uid}: cada quien lee/edita solo su propio documento.
     match /usuarios/{uid} {
-      allow read: if esDueno(uid) || rol() in ['entidad_respuesta', 'estado'];
+      allow read: if esDueno(uid) || rol() == 'estado_entidad_respuesta';
       allow write: if false; // solo el backend (Admin SDK) escribe usuarios/roles
     }
 
@@ -30,12 +30,12 @@ service cloud.firestore {
     // (monitoreo de zonas afectadas es información compartida entre todos los roles).
     match /zonas/{zonaId} {
       allow read: if estaAutenticado();
-      allow write: if false; // solo el backend (agentes/entidad_respuesta) escribe zonas
+      allow write: if false; // solo el backend (agentes / estado_entidad_respuesta) escribe zonas
     }
 
-    // damnificados/{id}: el damnificado crea su propio reporte; entidad_respuesta/estado leen todo.
+    // damnificados/{id}: el damnificado crea su propio reporte; estado_entidad_respuesta lee todo.
     match /damnificados/{id} {
-      allow read: if rol() in ['entidad_respuesta', 'estado'];
+      allow read: if rol() == 'estado_entidad_respuesta';
       allow create: if rol() == 'damnificado';
       allow update, delete: if false;
     }
@@ -45,16 +45,63 @@ service cloud.firestore {
       allow read: if estaAutenticado() && (
         resource.data.donante_id == request.auth.uid ||
         resource.data.empresa_beneficiaria_id == request.auth.uid ||
-        rol() in ['entidad_respuesta', 'estado']
+        rol() == 'estado_entidad_respuesta'
       );
       allow create: if rol() == 'donante' && request.resource.data.donante_id == request.auth.uid;
       allow update, delete: if false; // solo el backend cambia el estado de una donación
     }
 
-    // ordenes_despliegue/{id}: solo entidad_respuesta y estado.
+    // ordenes_despliegue/{id}: solo estado_entidad_respuesta.
     match /ordenes_despliegue/{id} {
-      allow read: if rol() in ['entidad_respuesta', 'estado'];
+      allow read: if rol() == 'estado_entidad_respuesta';
       allow write: if false; // solo lo escriben los agentes vía backend
+    }
+
+    // iniciativas/{id} (D3): catálogo público del portal — lectura para cualquier
+    // usuario autenticado; solo el backend las crea/actualiza.
+    match /iniciativas/{id} {
+      allow read: if estaAutenticado();
+      allow write: if false;
+    }
+
+    // necesidades/{id} (D4): las ve estado_entidad_respuesta (catálogo filtrable +
+    // vincularse a una). Se crean por el backend (manual, agente o sistema de riesgo).
+    match /necesidades/{id} {
+      allow read: if rol() == 'estado_entidad_respuesta';
+      allow write: if false;
+    }
+
+    // avances_campo/{id}: reportes de entrega/progreso — solo estado_entidad_respuesta.
+    match /avances_campo/{id} {
+      allow read: if rol() == 'estado_entidad_respuesta';
+      allow write: if false; // solo el backend
+    }
+
+    // notificaciones_entidad/{id}: participaciones requeridas — solo estado_entidad_respuesta.
+    match /notificaciones_entidad/{id} {
+      allow read: if rol() == 'estado_entidad_respuesta';
+      allow write: if false; // solo el backend
+    }
+
+    // centros_acopio/{id}: puntos de recolección — lectura para cualquier autenticado
+    // (el portal los muestra); alta solo por el backend.
+    match /centros_acopio/{id} {
+      allow read: if estaAutenticado();
+      allow write: if false;
+    }
+
+    // evidencias/{id}: imágenes de análisis (satelital/aérea/terreno) + clasificación IA.
+    match /evidencias/{id} {
+      allow read: if estaAutenticado();
+      allow write: if false; // sube el backend a Cloud Storage + registra la referencia
+    }
+
+    // desastres/{id}: eventos detectados por el Sistema de Identificación en
+    // fuentes abiertas (noticias). Los busca y guarda el backend (con la hora de
+    // búsqueda para la caché de 12 h); los lee estado_entidad_respuesta.
+    match /desastres/{id} {
+      allow read: if rol() == 'estado_entidad_respuesta';
+      allow write: if false; // solo el backend (Google Programmable Search)
     }
   }
 }

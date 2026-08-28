@@ -26,6 +26,10 @@ COLECCIONES = {
     "zonas.json": "zonas",
     "damnificados.json": "damnificados",
     "donaciones.json": "donaciones",
+    "iniciativas.json": "iniciativas",
+    "necesidades.json": "necesidades",
+    "centros_acopio.json": "centros_acopio",
+    "desastres.json": "desastres",
 }
 
 
