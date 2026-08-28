@@ -65,12 +65,20 @@ pytest
 
 ## Documentación
 
-- [`docs/contratos_agentes.md`](docs/contratos_agentes.md) — contrato congelado de los 3 agentes.
-- [`docs/frontend_analisis.md`](docs/frontend_analisis.md) — qué asume el frontend hoy.
-- [`docs/decisiones_tecnicas.md`](docs/decisiones_tecnicas.md) — decisiones de stack y arquitectura.
-- [`docs/demo_day_scope.md`](docs/demo_day_scope.md) — qué queda dentro/fuera del alcance de la demo.
-- `PLAN_CLAUDE_CODE.md` / `PROMPT_CONFIGURACION_INFRA(1).md` — prompts originales del proyecto (en `Back/`).
+- [`docs/guia_verificacion_local.md`](docs/guia_verificacion_local.md) — 📖 **Guía paso a paso para correr y verificar la app en local (Back + Front)**.
+- [`docs/infra_setup_report.md`](docs/infra_setup_report.md) — Reporte de infraestructura GCP y Firebase (`go-fest-506814`).
+- [`docs/contratos_agentes.md`](docs/contratos_agentes.md) — Contrato congelado de los 3 agentes de IA.
+- [`docs/frontend_analisis.md`](docs/frontend_analisis.md) — Análisis de contratos e integración con el frontend.
+- [`docs/decisiones_tecnicas.md`](docs/decisiones_tecnicas.md) — Registro de decisiones técnicas y arquitectura.
+- [`docs/demo_day_scope.md`](docs/demo_day_scope.md) — Alcance de la demo para el Demo Day.
+- [`docs/PROMPT_CONFIGURACION_INFRA(1).md`](docs/PROMPT_CONFIGURACION_INFRA(1).md) — Prompt maestro de infraestructura.
 
 ## Infraestructura Google Cloud / Firebase
 
-Ver `Back/PROMPT_CONFIGURACION_INFRA(1).md`. Requiere pasos manuales (login interactivo, facturación, restricción de API keys) antes de poder ejecutar la configuración automatizada — `gcloud`/`firebase` CLI no están instalados en este entorno todavía.
+La infraestructura se encuentra **completamente configurada y aprovisionada** en el proyecto **`go-fest-506814`** (`us-central1`):
+- **Firestore Native**: Base de datos activa con 21 documentos iniciales y reglas de seguridad desplegadas (`firestore.rules`).
+- **Cloud Storage**: Bucket `gs://go-fest-506814-storage`.
+- **Service Account**: `firebase-adminsdk-hackaton@go-fest-506814.iam.gserviceaccount.com` con credencial en `Back/firebase-key.json`.
+- **BigQuery**: Dataset `metricas_desastre` listo para analítica.
+- **Vertex AI & Maps**: Habilitadas con fallback de resiliencia ante contingencias de cuota.
+
