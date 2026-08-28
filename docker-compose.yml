@@ -4,9 +4,7 @@
 #
 #   Frontend → http://localhost:8080
 #   Backend  → http://localhost:8000   (OpenAPI en /docs, health en /health)
-#
-# El frontend arranca hablando con el backend (VITE_USE_MOCK=false). Si el backend
-# falla, cae solo a los datos mock locales (ver frontend/src/lib/modus-api.ts).
+
 services:
   backend:
     build:
@@ -18,19 +16,21 @@ services:
     environment:
       ENVIRONMENT: docker
       LOG_LEVEL: INFO
-      # Sin credenciales de Google Cloud: los 3 agentes usan su fallback por reglas
-      # y los endpoints que dependen de Firestore devuelven 503. El portal público
-      # (/zonas/publicas) funciona igual con los datos de data/mock/.
-      AGENTS_FORCE_FALLBACK: "true"
+      GOOGLE_CLOUD_PROJECT: go-fest-506814
+      GOOGLE_APPLICATION_CREDENTIALS: /app/firebase-key.json
+      FIREBASE_STORAGE_BUCKET: go-fest-506814-storage
+      VERTEX_AI_REGION: us-central1
+      VERTEX_AI_GEMINI_MODEL: gemini-2.0-flash
+      BIGQUERY_DATASET: metricas_desastre
+      AGENTS_FORCE_FALLBACK: "false"
       EXTERNAL_CALL_TIMEOUT_SECONDS: "8"
-    # Opcional: si existe Back/.env (credenciales reales) se carga; si no, se ignora.
     env_file:
       - path: ./Back/.env
         required: false
-    # ':z' reetiqueta los bind mounts para SELinux (Fedora/RHEL). Inofensivo en otros hosts.
     volumes:
       - ./Back/app:/app/app:z
       - ./Back/scripts:/app/scripts:z
+      - ./Back/firebase-key.json:/app/firebase-key.json:ro,z
       - ./data:/data:ro,z
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
@@ -46,11 +46,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # URL que usa el navegador — el puerto publicado en el host.
+      # URL que usa el navegador en el host
       VITE_API_URL: http://localhost:8000
-      # URL que usa el render en servidor (SSR), dentro de la red de compose.
+      # URL interna que usa el SSR dentro de la red Docker
       API_URL_INTERNAL: http://backend:8000
       VITE_USE_MOCK: "false"
+      VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-AIzaSyBDqvy6Wujh9xaxxkNEa7EYjyBqU6F1pk8}
+    env_file:
+      - path: ./frontend/.env
+        required: false
     volumes:
       - ./frontend/src:/app/src:z
       - ./frontend/public:/app/public:z
