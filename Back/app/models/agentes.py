@@ -60,6 +60,16 @@ class OrquestadorInput(BaseModel):
     mensaje: str
     contexto_usuario: dict[str, Any] = Field(default_factory=dict)
 
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "rol": "damnificado",
+                "mensaje": "Necesitamos agua potable y kits de primeros auxilios en el sector San Miguel de Mocoa",
+                "contexto_usuario": {"zona_id": "zona-mocoa"},
+            }
+        }
+    }
+
 
 class OrquestadorOutput(BaseModel):
     respuesta: str
