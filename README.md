@@ -63,22 +63,23 @@ cd Back
 pytest
 ```
 
-## Documentación
+## Documentación del Proyecto
 
-- [`docs/guia_verificacion_local.md`](docs/guia_verificacion_local.md) — 📖 **Guía paso a paso para correr y verificar la app en local (Back + Front)**.
-- [`docs/infra_setup_report.md`](docs/infra_setup_report.md) — Reporte de infraestructura GCP y Firebase (`go-fest-506814`).
-- [`docs/contratos_agentes.md`](docs/contratos_agentes.md) — Contrato congelado de los 3 agentes de IA.
-- [`docs/frontend_analisis.md`](docs/frontend_analisis.md) — Análisis de contratos e integración con el frontend.
-- [`docs/decisiones_tecnicas.md`](docs/decisiones_tecnicas.md) — Registro de decisiones técnicas y arquitectura.
-- [`docs/demo_day_scope.md`](docs/demo_day_scope.md) — Alcance de la demo para el Demo Day.
-- [`docs/PROMPT_CONFIGURACION_INFRA(1).md`](docs/PROMPT_CONFIGURACION_INFRA(1).md) — Prompt maestro de infraestructura.
+- [`AGENTS.md`](AGENTS.md) — 🤖 **Instrucciones maestras y reglas de desarrollo continuo para Antigravity**.
+- [`docs/guia_verificacion_local.md`](docs/guia_verificacion_local.md) — 📖 **Guía interactiva paso a paso para correr y verificar la app en local (Back + Front)**.
+- [`docs/infraestructura_gcp_firebase.md`](docs/infraestructura_gcp_firebase.md) — ☁️ **Arquitectura de infraestructura Google Cloud & Firebase (`go-fest-506814`)**.
+- [`docs/contratos_agentes.md`](docs/contratos_agentes.md) — 🤖 Contratos congelados de entrada y salida de los 3 agentes de IA.
+- [`docs/frontend_analisis.md`](docs/frontend_analisis.md) — 🎨 Análisis de contratos de API e integración con la UI.
+- [`docs/decisiones_tecnicas.md`](docs/decisiones_tecnicas.md) — 📋 Bitácora histórica de decisiones técnicas y arquitectura.
+- [`docs/demo_day_scope.md`](docs/demo_day_scope.md) — 🎯 Alcance priorizado para la presentación del Demo Day.
 
-## Infraestructura Google Cloud / Firebase
+## Infraestructura en la Nube (Google Cloud & Firebase)
 
-La infraestructura se encuentra **completamente configurada y aprovisionada** en el proyecto **`go-fest-506814`** (`us-central1`):
-- **Firestore Native**: Base de datos activa con 21 documentos iniciales y reglas de seguridad desplegadas (`firestore.rules`).
-- **Cloud Storage**: Bucket `gs://go-fest-506814-storage`.
-- **Service Account**: `firebase-adminsdk-hackaton@go-fest-506814.iam.gserviceaccount.com` con credencial en `Back/firebase-key.json`.
-- **BigQuery**: Dataset `metricas_desastre` listo para analítica.
-- **Vertex AI & Maps**: Habilitadas con fallback de resiliencia ante contingencias de cuota.
+La infraestructura se encuentra **completamente aprovisionada y operativa** en el proyecto **`go-fest-506814`** (`us-central1`):
+- **Cloud Firestore Native**: Base de datos NoSQL activa con 21 documentos iniciales y reglas de seguridad desplegadas (`Back/firestore.rules`).
+- **Google Maps Platform**: Integración con Maps JavaScript API en modo oscuro y satelital.
+- **Cloud Storage**: Bucket `gs://go-fest-506814-storage` para evidencia visual de desastres.
+- **Service Account**: `firebase-adminsdk-hackaton@go-fest-506814...` con credencial en `Back/firebase-key.json`.
+- **BigQuery**: Dataset `metricas_desastre` listo para analítica y métricas de ayuda por sector.
+- **Vertex AI & Resiliencia**: Modelos Gemini 2.0 Flash con fallback automático determinista ante contingencias de cuota.
 

@@ -76,7 +76,14 @@ Sigue estos pasos en tu navegador para validar que cada capa del sistema funcion
    - **Resultado esperado:** Respuesta `200 OK` con las 5 zonas activas obtenidas en vivo desde Cloud Firestore (`zona-mocoa`, `zona-cundinamarca`, `zona-choco`, `zona-guajira`, `zona-santander`).
 
 3. **Prueba del Agente Orquestador (`POST /chat`):**
-   - En Swagger, expande **`POST /chat`** y envía el siguiente cuerpo de prueba:
+   - En Swagger, expande **`POST /chat`**, haz clic en *Try it out*.
+   - **Autenticación en local:** Puedes ejecutar la petición **directamente sin configurar ningún token** (el entorno local asigna automáticamente un usuario de prueba `damnificado`).
+   - Si deseas simular un rol específico (como `estado` o `entidad_respuesta`), haz clic en el botón verde **"Authorize"** en la parte superior derecha de Swagger e introduce:
+     ```text
+     dev-token:estado
+     ```
+     *(o `dev-token:entidad_respuesta`, `dev-token:donante`, `dev-token:damnificado`)*.
+   - Envía el siguiente cuerpo de prueba:
    ```json
    {
      "rol": "damnificado",

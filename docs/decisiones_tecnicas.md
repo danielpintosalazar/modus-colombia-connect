@@ -18,4 +18,12 @@ Cualquier framework o servicio adicional se documenta aquí con el motivo antes 
   - Creación del dataset de analítica `metricas_desastre` en BigQuery (Location: `US`).
   - Sembrado de 21 documentos iniciales de demo en Firestore (`usuarios`, `zonas`, `damnificados`, `donaciones`).
   - Resolución dinámica de credenciales en `app/core/firebase.py` y `app/core/vertex.py` para soportar `Certificate` con `Back/firebase-key.json` y fallback a `ApplicationDefault`.
+- **2026-08-28 (Google Maps Platform & AGENTS.md)**:
+  - Integración de **Google Maps JavaScript API** mediante `@googlemaps/js-api-loader` en [GoogleEmergencyMap.tsx](file:///c:/Users/DANIEL/Documents/hackaton/modus-colombia-connect/frontend/src/components/modus/GoogleEmergencyMap.tsx), reemplazando la imagen fija con un mapa interactivo geoespacial centrado en Colombia.
+  - Estilo oscuro de alto contraste (*Slate / Navy / Emergency Red*) adaptado a la identidad visual del proyecto.
+  - Soporte para alternar entre vista vectorial oscura y vista satelital híbrida para monitoreo de desastres.
+  - Marcadores de emergencias con animación de alerta por severidad y despliegue de zonas de riesgo UNGRD/IDEAM con radios de influencia.
+  - Establecimiento de [AGENTS.md](file:///c:/Users/DANIEL/Documents/hackaton/modus-colombia-connect/AGENTS.md) como guía maestra y regla de documentación continua para el asistente Antigravity.
+
+
 
